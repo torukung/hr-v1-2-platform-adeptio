@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <title>v1.0 Web Staff Portal — ESS Desktop</title>
-<meta name="viewport" content="width=1440, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#F4EFE5" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -11,26 +12,52 @@
 
 <style>
   :root {
+    color-scheme: light;
     --bg: #F4EFE5;
     --bg-deep: #ECE4D2;
     --paper: #FBF8F1;
     --surface: #FFFFFF;
     --ink: #14182A;
     --ink-2: #2A2F45;
-    --muted: #6B6E7B;
-    --muted-2: #8B8E99;
+    /* a11y: darkened for AA on --paper / --bg / #fff */
+    --muted: #5C5F6B;
+    --muted-2: #6B6E7B;
     --hairline: #E5DECC;
     --hairline-strong: #D8CFB8;
     --primary: #1A2A57;
     --primary-soft: #E5E8F2;
     --accent: #C4843A;
+    --accent-text: #7A5219;
     --accent-soft: #F4E7CE;
     --positive: #2E6F47;
     --positive-soft: #DDEAD8;
-    --warning: #B5832B;
+    --warning: #8C6320;
     --warning-soft: #F6E9C8;
     --danger: #A8392E;
     --danger-soft: #F2D7CD;
+
+    /* Spacing scale */
+    --space-1: 4px;  --space-2: 8px;  --space-3: 12px;
+    --space-4: 16px; --space-5: 20px; --space-6: 24px;
+    --space-7: 32px; --space-8: 40px;
+
+    /* Radius scale */
+    --radius-sm: 8px; --radius-md: 12px; --radius-lg: 14px;
+    --radius-xl: 18px; --radius-pill: 999px;
+
+    /* Shadow scale */
+    --shadow-card: 0 1px 2px rgba(20,24,42,.04), 0 4px 12px rgba(20,24,42,.06);
+    --shadow-pop:  0 12px 28px -8px rgba(20,24,42,.18);
+    --shadow-overlay: 0 24px 60px -16px rgba(20,24,42,.32);
+
+    /* Type scale */
+    --fs-xs: 11px; --fs-sm: 12px; --fs-base: 13.5px;
+    --fs-md: 14px; --fs-lg: 16px; --fs-xl: 18px;
+    --fs-2xl: 22px; --fs-display: 28px; --fs-display-lg: 44px;
+
+    /* Motion */
+    --motion-fast: 120ms; --motion-base: 200ms; --motion-slow: 320ms;
+    --ease-standard: cubic-bezier(.2,.0,.2,1);
 
     --c-A: #0E9F8F;
     --c-B: #1F3D8A;
@@ -46,6 +73,34 @@
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
+  /* Reset button chrome on semantic-wrapper buttons (icon pills, click-cards) */
+  button { font: inherit; color: inherit; }
+  button.tb-me, button.search { text-align: left; cursor: pointer; }
+  /* a11y: visible focus indicator everywhere */
+  :where(button, a, [role="button"], input, select, textarea, [tabindex]):focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  /* a11y: skip link */
+  .skip-link {
+    position: absolute; left: 8px; top: 8px;
+    background: var(--primary); color: #fff;
+    padding: 8px 12px; border-radius: var(--radius-sm);
+    text-decoration: none; font-weight: 600; font-size: var(--fs-sm);
+    transform: translateY(-200%); transition: transform var(--motion-base) var(--ease-standard);
+    z-index: 100;
+  }
+  .skip-link:focus { transform: translateY(0); }
+  /* a11y: honor reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
   body {
     font-family: var(--font-ui);
     background: var(--bg);
@@ -682,12 +737,31 @@
 </style>
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to main content</a>
   <div id="root"></div>
+  <noscript><div style="padding:24px;font-family:system-ui">Enable JavaScript to use the staff portal.</div></noscript>
 
-  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 
-  <script type="text/babel" src="src/staff-web.jsx"></script>
+  <!-- shared policy data — same module loaded by HR Console & Manager Portal -->
+  <script type="text/babel" src="src/policy-ledger.jsx"></script>
+  <!-- shared UI primitives (formatLAK, Alert, KPI, StatusPill, policyToneColors) -->
+  <script type="text/babel" src="src/portal-ui.jsx"></script>
+  <!-- staff-web split into per-screen modules. Globals attach via window in each file. -->
+  <script type="text/babel" src="src/staff-web/icons.jsx"></script>
+  <script type="text/babel" src="src/staff-web/data.jsx"></script>
+  <script type="text/babel" src="src/staff-web/chrome.jsx"></script>
+  <script type="text/babel" src="src/staff-web/home.jsx"></script>
+  <script type="text/babel" src="src/staff-web/profile.jsx"></script>
+  <script type="text/babel" src="src/staff-web/pay.jsx"></script>
+  <script type="text/babel" src="src/staff-web/leave.jsx"></script>
+  <script type="text/babel" src="src/staff-web/claims.jsx"></script>
+  <script type="text/babel" src="src/staff-web/docs.jsx"></script>
+  <script type="text/babel" src="src/staff-web/help.jsx"></script>
+  <script type="text/babel" src="src/staff-web/learn.jsx"></script>
+  <script type="text/babel" src="src/staff-web/perf.jsx"></script>
+  <script type="text/babel" src="src/staff-web/app.jsx"></script>
 </body>
 </html>

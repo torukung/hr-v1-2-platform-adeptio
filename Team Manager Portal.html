@@ -3,26 +3,44 @@
 <head>
 <meta charset="utf-8" />
 <title>v1.0 Team Manager Portal</title>
-<meta name="viewport" content="width=1440, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#F4EFE5" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Noto+Sans+Lao:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
   :root{
+    color-scheme:light;
     --bg:#F4EFE5;--bg-deep:#ECE4D2;--paper:#FBF8F1;--surface:#fff;
-    --ink:#14182A;--ink-2:#2A2F45;--muted:#6B6E7B;--muted-2:#8B8E99;
+    --ink:#14182A;--ink-2:#2A2F45;
+    /* a11y: darkened for AA on --paper/--bg/#fff */
+    --muted:#5C5F6B;--muted-2:#6B6E7B;
     --hairline:#E5DECC;--hairline-strong:#D8CFB8;
     --primary:#1A2A57;--primary-soft:#E5E8F2;
-    --accent:#C4843A;--accent-soft:#F4E7CE;
+    --accent:#C4843A;--accent-text:#7A5219;--accent-soft:#F4E7CE;
     --positive:#2E6F47;--positive-soft:#DDEAD8;
-    --warning:#B5832B;--warning-soft:#F6E9C8;
+    --warning:#8C6320;--warning-soft:#F6E9C8;
     --danger:#A8392E;--danger-soft:#F2D7CD;
+    --space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:20px;--space-6:24px;--space-7:32px;--space-8:40px;
+    --radius-sm:8px;--radius-md:12px;--radius-lg:14px;--radius-xl:18px;--radius-pill:999px;
+    --shadow-card:0 1px 2px rgba(20,24,42,.04),0 4px 12px rgba(20,24,42,.06);
+    --shadow-pop:0 12px 28px -8px rgba(20,24,42,.18);
+    --shadow-overlay:0 24px 60px -16px rgba(20,24,42,.32);
+    --fs-xs:11px;--fs-sm:12px;--fs-base:13.5px;--fs-md:14px;--fs-lg:16px;--fs-xl:18px;--fs-2xl:22px;--fs-display:28px;--fs-display-lg:44px;
+    --motion-fast:120ms;--motion-base:200ms;--motion-slow:320ms;--ease-standard:cubic-bezier(.2,.0,.2,1);
     --font-ui:"Instrument Sans",ui-sans-serif,system-ui,sans-serif;
     --font-display:"Instrument Serif",serif;
     --font-mono:"JetBrains Mono",ui-monospace,monospace;
     --font-lao:"Noto Sans Lao","Instrument Sans",sans-serif;
   }
   *{box-sizing:border-box}html,body{margin:0;padding:0}
+  /* Reset button chrome on semantic-wrapper buttons */
+  button{font:inherit;color:inherit}
+  button.search,button.me-pill{text-align:left;cursor:pointer}
+  :where(button,a,[role="button"],input,select,textarea,[tabindex]):focus-visible{outline:2px solid var(--primary);outline-offset:2px;border-radius:4px}
+  .skip-link{position:absolute;left:8px;top:8px;background:var(--primary);color:#fff;padding:8px 12px;border-radius:var(--radius-sm);text-decoration:none;font-weight:600;font-size:var(--fs-sm);transform:translateY(-200%);transition:transform var(--motion-base) var(--ease-standard);z-index:100}
+  .skip-link:focus{transform:translateY(0)}
+  @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
   body{font-family:var(--font-ui);background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
   .lao{font-family:var(--font-lao)}.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
   .serif{font-family:var(--font-display);font-style:italic}.muted{color:var(--muted)}.small{font-size:11.5px}
@@ -170,10 +188,18 @@
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to main content</a>
 <div id="root"></div>
-<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<noscript><div style="padding:24px;font-family:system-ui">Enable JavaScript to use the manager portal.</div></noscript>
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<!-- Shared policy data — single source of truth across HR · Manager · Staff portals -->
+<script type="text/babel" src="src/policy-ledger.jsx"></script>
+<!-- Shared UI primitives (formatLAK, Alert, KPI, StatusPill, policyToneColors) -->
+<script type="text/babel" src="src/portal-ui.jsx"></script>
+
 <script type="text/babel">
 const I=({n,s=16,c="currentColor",w=1.7})=>{const P={
 home:<><path d="M3 11l9-7 9 7M5 10v10h14V10"/></>,
@@ -197,7 +223,7 @@ eye:<><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12
 cog:<><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></>,
 };return <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth={w} strokeLinecap="round" strokeLinejoin="round">{P[n]}</svg>;};
 
-const ME={n:"Khamla Chanthavong",lo:"ຂຳລາ ຈັນທະວົງ",t:"Production Manager · Bottling A",team:"Bottling Line A · Savannakhet",size:14,av:"KC"};
+const ME={n:"Khamla Chanthavong",lo:"ຂຳລາ ຈັນທະວົງ",t:"Production Manager · Bottling A",team:"Bottling Line A · Savannakhet",size:14,av:"KC",empId:"EMP-00800"};
 
 const APPROVALS=[
   {id:"LV-2025-0902",who:"Souksavanh P.",lo:"ສຸກສະຫວັນ",ic:"SP",kind:"Annual leave",lokind:"ລາພັກ",when:"Aug 14–16 · 3 days",note:"Family obligations · cover Bounmy V.",sla:"Due in 1d",pri:"normal",step:1},
@@ -209,18 +235,18 @@ const APPROVALS=[
 ];
 
 const ROSTER=[
-  {n:"Bounmy Vongphachanh",lo:"ບຸນມີ",r:"Senior Operator",av:"BV",st:"work"},
-  {n:"Phetdara Thavixay",lo:"ເພັດດາລາ",r:"Operator",av:"PT",st:"work"},
-  {n:"Souksavanh Phommachanh",lo:"ສຸກສະຫວັນ",r:"Senior Supervisor",av:"SP",st:"work"},
-  {n:"Sengthong Houngphachanh",lo:"ແສງທອງ",r:"Operator",av:"SH",st:"lv"},
-  {n:"Vilakhone Lasaphone",lo:"ວິຄາໂຄນ",r:"Junior Operator",av:"VL",st:"lv"},
-  {n:"Aphone Saysana",lo:"ອາໂພນ",r:"Operator",av:"AS",st:"work"},
-  {n:"Khamphout Sisavath",lo:"ຄຳພຸດ",r:"Operator",av:"KS",st:"work"},
-  {n:"Manysone Phimmavong",lo:"ມະນີສອນ",r:"Operator",av:"MP",st:"late"},
-  {n:"Thongdy Bounnhong",lo:"ທອງດີ",r:"Operator",av:"TB",st:"work"},
-  {n:"Lattanakone Vilay",lo:"ລັດຕະນະໂກນ",r:"Maintenance",av:"LV",st:"work"},
-  {n:"Phimphone Souvann",lo:"ພິມພອນ",r:"Quality",av:"PS",st:"work"},
-  {n:"Soukphilavanh K.",lo:"ສຸກພິລາວັນ",r:"Operator",av:"SK",st:"work"},
+  {id:"EMP-00811",n:"Bounmy Vongphachanh",lo:"ບຸນມີ",r:"Senior Operator",av:"BV",st:"work"},
+  {id:"EMP-00812",n:"Phetdara Thavixay",lo:"ເພັດດາລາ",r:"Operator",av:"PT",st:"work"},
+  {id:"EMP-00427",n:"Souksavanh Phommachanh",lo:"ສຸກສະຫວັນ",r:"Senior Supervisor",av:"SP",st:"work"},
+  {id:"EMP-00813",n:"Sengthong Houngphachanh",lo:"ແສງທອງ",r:"Operator",av:"SH",st:"lv"},
+  {id:"EMP-00814",n:"Vilakhone Lasaphone",lo:"ວິຄາໂຄນ",r:"Junior Operator",av:"VL",st:"lv"},
+  {id:"EMP-00815",n:"Aphone Saysana",lo:"ອາໂພນ",r:"Operator",av:"AS",st:"work"},
+  {id:"EMP-00816",n:"Khamphout Sisavath",lo:"ຄຳພຸດ",r:"Operator",av:"KS",st:"work"},
+  {id:"EMP-00833",n:"Manysone Phimmavong",lo:"ມະນີສອນ",r:"Operator",av:"MP",st:"late"},
+  {id:"EMP-00817",n:"Thongdy Bounnhong",lo:"ທອງດີ",r:"Operator",av:"TB",st:"work"},
+  {id:"EMP-00818",n:"Lattanakone Vilay",lo:"ລັດຕະນະໂກນ",r:"Maintenance",av:"LV",st:"work"},
+  {id:"EMP-00819",n:"Phimphone Souvann",lo:"ພິມພອນ",r:"Quality",av:"PS",st:"work"},
+  {id:"EMP-00820",n:"Soukphilavanh K.",lo:"ສຸກພິລາວັນ",r:"Operator",av:"SK",st:"work"},
 ];
 
 const PERF=[
@@ -231,12 +257,19 @@ const PERF=[
   {n:"Aphone S.",r:"Operator",av:"AS",score:3.8,obj:72,att:88,saf:100},
 ];
 
+// Frozen const maps — replace stringly-typed kind/route/filter/tone literals.
+// TONE_FG/TONE_BG/policyToneColors come from portal-ui.jsx (window.*)
+const ROUTES=Object.freeze({HOME:"home",APPROVALS:"approvals",TEAM:"team",SCHED:"sched",PERF:"perf",REPORT:"report",CHAT:"chat"});
+const FILTERS=Object.freeze({ALL:"all",LEAVE:"leave",OT:"ot",CLAIM:"claim",OTHER:"other"});
+const KIND_TO_FILTER=Object.freeze({"Annual leave":FILTERS.LEAVE,"Sick leave":FILTERS.LEAVE,"Overtime":FILTERS.OT,"Travel claim":FILTERS.CLAIM,"Shift swap":FILTERS.OTHER,"Letter request":FILTERS.OTHER});
+const KIND_TONE=Object.freeze({"Annual leave":"primary","Sick leave":"danger","Overtime":"warning","Travel claim":"accent","Shift swap":"","Letter request":""});
+
 function App(){
-  const [route,setRoute]=React.useState("home");
+  const [route,setRoute]=React.useState(ROUTES.HOME);
   const [lang,setLang]=React.useState("en");
-  const [filter,setFilter]=React.useState("all");
+  const [filter,setFilter]=React.useState(FILTERS.ALL);
   const t=(en,lo)=>lang==="en"?en:lo;
-  const filtered=APPROVALS.filter(a=>filter==="all"||(filter==="leave"&&(a.kind.includes("leave")||a.kind==="Annual leave"||a.kind==="Sick leave"))||(filter==="ot"&&a.kind==="Overtime")||(filter==="claim"&&a.kind==="Travel claim")||(filter==="other"&&(a.kind==="Shift swap"||a.kind==="Letter request")));
+  const filtered=APPROVALS.filter(a=>filter===FILTERS.ALL||KIND_TO_FILTER[a.kind]===filter);
   return <div className={"shell "+(lang==="lo"?"lao-mode":"")}>
     <aside className="sidebar">
       <div className="brand">
@@ -251,36 +284,36 @@ function App(){
           <div className="me-tag">Manager · {ME.size} reports</div>
         </div>
       </div>
-      <nav className="nav">
-        {[{i:"home",l:"Overview",lo:"ພາບລວມ",ic:"home"},
-          {i:"approvals",l:"Approvals",lo:"ການອະນຸມັດ",ic:"inbox",b:APPROVALS.length},
-          {i:"team",l:"Team",lo:"ທີມ",ic:"team"},
-          {i:"sched",l:"Schedule",lo:"ກຳນົດການ",ic:"clock"},
-          {i:"perf",l:"Performance",lo:"ການປະເມີນ",ic:"target"},
-          {i:"report",l:"Reports",lo:"ລາຍງານ",ic:"report"},
-          {i:"chat",l:"Team chat",lo:"ສົນທະນາ",ic:"chat"},
-        ].map(n=><button key={n.i} className={"nv"+(route===n.i?" on":"")} onClick={()=>setRoute(n.i)}><I n={n.ic} s={16}/><span>{t(n.l,n.lo)}</span>{n.b&&<span className="badge">{n.b}</span>}</button>)}
+      <nav className="nav" aria-label={t("Primary","ເມນູຫຼັກ")}>
+        {[{i:ROUTES.HOME,l:"Overview",lo:"ພາບລວມ",ic:"home"},
+          {i:ROUTES.APPROVALS,l:"Approvals",lo:"ການອະນຸມັດ",ic:"inbox",b:APPROVALS.length},
+          {i:ROUTES.TEAM,l:"Team",lo:"ທີມ",ic:"team"},
+          {i:ROUTES.SCHED,l:"Schedule",lo:"ກຳນົດການ",ic:"clock"},
+          {i:ROUTES.PERF,l:"Performance",lo:"ການປະເມີນ",ic:"target"},
+          {i:ROUTES.REPORT,l:"Reports",lo:"ລາຍງານ",ic:"report"},
+          {i:ROUTES.CHAT,l:"Team chat",lo:"ສົນທະນາ",ic:"chat"},
+        ].map(n=><button key={n.i} className={"nv"+(route===n.i?" on":"")} aria-current={route===n.i?"page":undefined} aria-label={n.b?`${t(n.l,n.lo)} — ${n.b} ${t("pending","ຄ້າງ")}`:undefined} onClick={()=>setRoute(n.i)}><I n={n.ic} s={16}/><span>{t(n.l,n.lo)}</span>{n.b?<span className="badge" aria-hidden="true">{n.b}</span>:null}</button>)}
       </nav>
       <button className="nv soft"><I n="cog" s={16}/><span>{t("Settings","ການຕັ້ງຄ່າ")}</span></button>
     </aside>
     <div className="main">
-      <div className="topbar">
-        <div className="search"><I n="search" s={15} c="#8B8E99"/><span>{t("Search team, requests…","ຄົ້ນຫາ…")}</span><kbd>⌘K</kbd></div>
+      <header className="topbar" role="banner">
+        <button type="button" className="search" aria-label={t("Search team and requests","ຄົ້ນຫາ")} aria-keyshortcuts="Meta+K"><I n="search" s={15} c="#8B8E99"/><span>{t("Search team, requests…","ຄົ້ນຫາ…")}</span><kbd>⌘&nbsp;K</kbd></button>
         <div className="topbar-r">
-          <div className="lang">
-            <button className={lang==="en"?"on":""} onClick={()=>setLang("en")}>EN</button>
-            <button className={"lao "+(lang==="lo"?"on":"")} onClick={()=>setLang("lo")}>ລາວ</button>
+          <div className="lang" role="group" aria-label={t("Language","ພາສາ")}>
+            <button aria-pressed={lang==="en"} className={lang==="en"?"on":""} onClick={()=>setLang("en")}>EN</button>
+            <button aria-pressed={lang==="lo"} className={"lao "+(lang==="lo"?"on":"")} onClick={()=>setLang("lo")}>ລາວ</button>
           </div>
-          <button className="ic-btn"><I n="bell" s={17}/><i className="dot"/></button>
-          <div className="me-pill"><div className="av">{ME.av}</div><div><div className="nm">{ME.n.split(" ")[0]}</div><div className="rl">Manager</div></div><I n="chevD" s={14} c="#8B8E99"/></div>
+          <button className="ic-btn" aria-label={t("Notifications, unread","ການແຈ້ງເຕືອນ")}><I n="bell" s={17}/><i className="dot" aria-hidden="true"/></button>
+          <button type="button" className="me-pill" aria-haspopup="menu" aria-label={t(`Open profile menu — ${ME.n}`,`ເປີດເມນູ ${ME.n}`)}><span className="av" aria-hidden="true">{ME.av}</span><span><span className="nm">{ME.n.split(" ")[0]}</span><span className="rl">Manager</span></span><I n="chevD" s={14} c="#8B8E99"/></button>
         </div>
-      </div>
-      <div className="content">
+      </header>
+      <main id="main" className="content">
         <div className="page">
           {/* Hero */}
           <div className="hero">
             <div>
-              <div className="hero-eb">{new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"})}</div>
+              <div className="hero-eb">{new Date().toLocaleDateString(lang==="lo"?"lo-LA":undefined,{weekday:"long",day:"numeric",month:"long"})}</div>
               <h1 className="hero-t">{t("Good morning,","ສະບາຍດີ,")} <span className="acc">{lang==="en"?"Khamla":"ຂຳລາ"}</span></h1>
               <div className="hero-s">{t(`6 approvals waiting · ${ROSTER.filter(r=>r.st==="work").length} on shift · ${ROSTER.filter(r=>r.st==="lv").length} on leave today`,`ການອະນຸມັດ 6 ລາຍການ · ກຳລັງເຮັດວຽກ ${ROSTER.filter(r=>r.st==="work").length} ຄົນ`)}</div>
             </div>
@@ -305,26 +338,26 @@ function App(){
             <div className="card col-8">
               <div className="card-h">
                 <div><div className="card-t">{t("Approvals queue","ຄິວການອະນຸມັດ")}</div><div className="card-s">{t("Newest first · grouped by type","ໃໝ່ສຸດກ່ອນ")}</div></div>
-                <div className="seg">
-                  <button className={filter==="all"?"on":""} onClick={()=>setFilter("all")}>{t("All","ທັງໝົດ")}<span className="ct">{APPROVALS.length}</span></button>
-                  <button className={filter==="leave"?"on":""} onClick={()=>setFilter("leave")}>{t("Leave","ລາ")}<span className="ct">2</span></button>
-                  <button className={filter==="ot"?"on":""} onClick={()=>setFilter("ot")}>OT<span className="ct">1</span></button>
-                  <button className={filter==="claim"?"on":""} onClick={()=>setFilter("claim")}>{t("Claim","ເບີກ")}<span className="ct">1</span></button>
-                  <button className={filter==="other"?"on":""} onClick={()=>setFilter("other")}>{t("Other","ອື່ນ")}<span className="ct">2</span></button>
+                <div className="seg" role="group" aria-label={t("Filter approvals by type","ກັ່ນຕອງ")}>
+                  <button aria-pressed={filter===FILTERS.ALL} className={filter===FILTERS.ALL?"on":""} onClick={()=>setFilter(FILTERS.ALL)}>{t("All","ທັງໝົດ")}<span className="ct" aria-label={`(${APPROVALS.length})`}>{APPROVALS.length}</span></button>
+                  <button aria-pressed={filter===FILTERS.LEAVE} className={filter===FILTERS.LEAVE?"on":""} onClick={()=>setFilter(FILTERS.LEAVE)}>{t("Leave","ລາ")}<span className="ct" aria-label="(2)">2</span></button>
+                  <button aria-pressed={filter===FILTERS.OT} className={filter===FILTERS.OT?"on":""} onClick={()=>setFilter(FILTERS.OT)}>OT<span className="ct" aria-label="(1)">1</span></button>
+                  <button aria-pressed={filter===FILTERS.CLAIM} className={filter===FILTERS.CLAIM?"on":""} onClick={()=>setFilter(FILTERS.CLAIM)}>{t("Claim","ເບີກ")}<span className="ct" aria-label="(1)">1</span></button>
+                  <button aria-pressed={filter===FILTERS.OTHER} className={filter===FILTERS.OTHER?"on":""} onClick={()=>setFilter(FILTERS.OTHER)}>{t("Other","ອື່ນ")}<span className="ct" aria-label="(2)">2</span></button>
                 </div>
               </div>
               <div className="appq">
                 {filtered.map(a=><div key={a.id} className="appq-i">
                   <div className="av">{a.ic}</div>
                   <div className="body">
-                    <div className="nm">{a.who} <span className="lao muted small">{a.lo}</span> <span className={"pill "+(a.kind==="Annual leave"?"primary":a.kind==="Overtime"?"warning":a.kind==="Travel claim"?"accent":a.kind==="Sick leave"?"danger":"")} style={{marginLeft:8}}>{t(a.kind,a.lokind)}</span> {a.pri==="high"&&<span className="pill danger" style={{marginLeft:4}}>{t("High","ດ່ວນ")}</span>}</div>
+                    <div className="nm">{a.who} <span className="lao muted small">{a.lo}</span> <span className={"pill "+(KIND_TONE[a.kind]||"")} style={{marginLeft:8}}>{t(a.kind,a.lokind)}</span> {a.pri==="high"&&<span className="pill danger" style={{marginLeft:4}}>{t("High","ດ່ວນ")}</span>}</div>
                     <div className="meta"><span className="mono">{a.id}</span> · {a.when} · {a.note}</div>
                   </div>
                   <div className="when">{a.sla}</div>
                   <div className="actions">
-                    <button className="b-ok"><I n="check" s={13}/>{t("Approve","ອະນຸ")}</button>
-                    <button className="b-no">{t("Reject","ປະຕິ")}</button>
-                    <button className="b-ed">{t("View","ເບິ່ງ")}</button>
+                    <button className="b-ok" aria-label={t(`Approve ${a.id} — ${a.who}`,`ອະນຸມັດ ${a.id}`)}><I n="check" s={13}/>{t("Approve","ອະນຸ")}</button>
+                    <button className="b-no" aria-label={t(`Reject ${a.id} — ${a.who}`,`ປະຕິເສດ ${a.id}`)}>{t("Reject","ປະຕິ")}</button>
+                    <button className="b-ed" aria-label={t(`View details for ${a.id}`,`ເບິ່ງ ${a.id}`)}>{t("View","ເບິ່ງ")}</button>
                   </div>
                 </div>)}
               </div>
@@ -365,6 +398,152 @@ function App(){
               </div>
             </div>
 
+            {/* Team policy compliance — derived from POLICY_LEDGER (same source as HR Analytics & Staff records) */}
+            {(typeof policyRollupForManager==="function") && (() => {
+              const rollup = policyRollupForManager(ME.empId);
+              const teamEntries = rollup.entries;
+              const rows = rollup.rows;
+              const teamCounts = rollup.byKind;
+              const teamTotal = rollup.total;
+              const cleanCount = ROSTER.length - rows.length;
+              const recent = policyRecent(teamEntries, 5);
+              return (
+              <div className="card col-12">
+                <div className="card-h">
+                  <div>
+                    <div className="card-t">{t("Team policy compliance — last 30 days","ການປະຕິບັດຕາມນະໂຍບາຍຂອງທີມ 30 ມື້")}</div>
+                    <div className="card-s">{ME.team} · {ROSTER.length} {t("staff","ຄົນ")} · {t("synced from HR Time & Attendance · same record staff & HR see","ຊິງຄ໌ຈາກ HR")}</div>
+                  </div>
+                  <div style={{display:"flex",gap:6,alignItems:"center"}}>
+                    <span className="pill" style={{background:"#DDEAD8",color:"#2E6F47",padding:"3px 10px"}}>{cleanCount} {t("clean","ສະອາດ")}</span>
+                    <span className="pill" style={{background:"#F4E7CE",color:"#B5832B",padding:"3px 10px"}}>{rows.filter(r=>r.level.id==="monitoring").length} {t("monitoring","ຕິດຕາມ")}</span>
+                    <span className="pill" style={{background:"#F2D7CD",color:"#A8392E",padding:"3px 10px"}}>{rows.filter(r=>r.level.id==="warned"||r.level.id==="severe").length} {t("warned","ເຕືອນ")}</span>
+                  </div>
+                </div>
+
+                {/* KPI strip — counts by kind */}
+                <div style={{display:"grid",gridTemplateColumns:"repeat(6,1fr)",gap:8,marginTop:10,marginBottom:14}}>
+                  {[
+                    {k:"late",label:t("Late","ຊ້າ"),tone:"warning"},
+                    {k:"early",label:t("Early-out","ອອກໄວ"),tone:"warning"},
+                    {k:"noshow",label:t("No-show","ບໍ່ມາ"),tone:"danger"},
+                    {k:"ot_unapprov",label:"OT-UA",tone:"warning"},
+                    {k:"lowconf",label:t("Low-conf","ໜ້າຕ່ຳ"),tone:"outline"},
+                    {k:"missing_pair",label:t("Pair","ຄູ່"),tone:"outline"},
+                  ].map(s=>{
+                    const v=teamCounts[s.k]||0;
+                    const def=POLICY_THRESHOLDS[s.k];
+                    return (
+                      <div key={s.k} style={{padding:"8px 10px",border:"1px solid var(--hairline)",borderRadius:8,background:"var(--paper)"}} title={def?def.rule:""}>
+                        <div style={{fontFamily:"var(--font-mono)",fontWeight:600,fontSize:18}}>{v}</div>
+                        <div style={{color:"var(--muted)",fontSize:11}}>{s.label}</div>
+                        {def && <div style={{color:"var(--muted)",fontSize:9.5,marginTop:2,fontFamily:"var(--font-mono)"}}>{def.rule}</div>}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div style={{display:"grid",gridTemplateColumns:"2fr 1fr",gap:14}}>
+                  {/* Per-staff table */}
+                  <div>
+                    <div style={{fontWeight:600,fontSize:13,marginBottom:6}}>{t("Direct reports with incidents","ສະມາຊິກທີ່ມີຂໍ້ບົກຜ່ອງ")}</div>
+                    {rows.length===0 ? (
+                      <div style={{color:"var(--muted)",fontSize:12,padding:"12px 0"}}>{t("Whole team is clean this period.","ທີມທັງໝົດສະອາດ.")}</div>
+                    ) : (
+                      <div style={{display:"flex",flexDirection:"column",gap:6}}>
+                        {rows.map(r=>{
+                          const tc=policyToneColors(r.level.tone);
+                          const lvlTone=r.level.tone==="positive"?"#2E6F47":tc.fg;
+                          const lvlSoft=r.level.tone==="positive"?"#DDEAD8":tc.soft;
+                          return (
+                            <div key={r.staffId} style={{display:"grid",gridTemplateColumns:"1.6fr repeat(5,40px) 90px 90px",gap:8,alignItems:"center",padding:"8px 10px",border:"1px solid var(--hairline)",borderRadius:8,background:"var(--paper)"}}>
+                              <div style={{display:"flex",gap:8,alignItems:"center",minWidth:0}}>
+                                <div style={{width:28,height:28,borderRadius:"50%",background:"var(--bg-deep)",display:"grid",placeItems:"center",fontSize:11,fontWeight:600}}>{r.staff.split(" ").map(s=>s[0]).slice(0,2).join("")}</div>
+                                <div style={{minWidth:0}}>
+                                  <div style={{fontSize:13,fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{r.staff}</div>
+                                  <div className="mono" style={{color:"var(--muted)",fontSize:10.5}}>{r.staffId}</div>
+                                </div>
+                              </div>
+                              <div className="mono" style={{fontSize:13,textAlign:"center",color:r.late>=3?"#C4843A":"#14182A"}}>{r.late||"·"}</div>
+                              <div className="mono" style={{fontSize:13,textAlign:"center",color:r.early>=3?"#C4843A":"#14182A"}}>{r.early||"·"}</div>
+                              <div className="mono" style={{fontSize:13,textAlign:"center",color:r.noshow>=1?"#A8392E":"#14182A"}}>{r.noshow||"·"}</div>
+                              <div className="mono" style={{fontSize:13,textAlign:"center",color:r.otUn>=2?"#C4843A":"#14182A"}}>{r.otUn||"·"}</div>
+                              <div className="mono" style={{fontSize:13,textAlign:"center",color:"var(--muted)"}}>{r.lowconf||r.other||"·"}</div>
+                              <div style={{textAlign:"center"}}>
+                                <span style={{padding:"2px 8px",borderRadius:999,background:lvlSoft,color:lvlTone,fontSize:10,fontWeight:600,letterSpacing:".06em"}}>{r.level.label.toUpperCase()}</span>
+                              </div>
+                              <div style={{display:"flex",gap:4}}>
+                                <button className="btn ghost" style={{padding:"4px 8px",fontSize:11}} aria-label={t(`Review ${r.staff}`,`ກວດ ${r.staff}`)}>{t("Review","ກວດ")}</button>
+                                {r.level.id==="warned"||r.level.id==="severe" ? <button className="btn" style={{padding:"4px 8px",fontSize:11,background:"#A8392E",color:"#fff",border:"none"}} aria-label={t(`Issue formal warning to ${r.staff}`,`ອອກໃບເຕືອນຫາ ${r.staff}`)}>{t("Issue","ອອກ")}</button> : null}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                    {/* Header legend */}
+                    <div style={{display:"grid",gridTemplateColumns:"1.6fr repeat(5,40px) 90px 90px",gap:8,marginTop:8,fontSize:10,color:"var(--muted)",fontWeight:500,letterSpacing:".06em",textTransform:"uppercase"}}>
+                      <span>STAFF</span><span style={{textAlign:"center"}}>LATE</span><span style={{textAlign:"center"}}>EARLY</span><span style={{textAlign:"center"}}>NS</span><span style={{textAlign:"center"}}>OT-UA</span><span style={{textAlign:"center"}}>OTHR</span><span style={{textAlign:"center"}}>STATUS</span><span></span>
+                    </div>
+                  </div>
+
+                  {/* Right rail: thresholds + recent */}
+                  <div style={{display:"flex",flexDirection:"column",gap:12}}>
+                    <div>
+                      <div style={{fontWeight:600,fontSize:13,marginBottom:6}}>{t("Warning thresholds","ເກນເຕືອນ")}</div>
+                      <div style={{display:"flex",flexDirection:"column",gap:4}}>
+                        {POLICY_WARNING_LEVELS.map(L=>{
+                          const tg=L.tone==="danger"?"#A8392E":L.tone==="warning"?"#C4843A":"#6B6E7B";
+                          return (
+                            <div key={L.id} style={{padding:"6px 10px",border:"1px solid var(--hairline)",borderRadius:6,fontSize:11.5,display:"flex",alignItems:"flex-start",gap:8}}>
+                              <span className="mono" style={{color:"var(--muted)",fontWeight:600,minWidth:42}}>{L.range[0]}–{L.range[1]>=999?"∞":L.range[1]}</span>
+                              <div style={{flex:1}}>
+                                <div style={{fontWeight:600,color:tg}}>{L.label}</div>
+                                <div style={{color:"var(--muted)",fontSize:10.5,marginTop:1}}>{L.manager}</div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <div style={{color:"var(--muted)",fontSize:10.5,marginTop:6,fontStyle:"italic"}}>{t("Defined once in HR · used across HR / Manager / Staff views.","ກຳນົດໂດຍ HR · ໃຊ້ຮ່ວມກັນທຸກພາກສ່ວນ.")}</div>
+                    </div>
+                    <div>
+                      <div style={{fontWeight:600,fontSize:13,marginBottom:6}}>{t("Recent on team","ເຫດການລ່າສຸດ")}</div>
+                      <div style={{display:"flex",flexDirection:"column",gap:6}}>
+                        {recent.map(e=>{
+                          const def=POLICY_THRESHOLDS[e.kind]||{short:e.kind.toUpperCase(),tone:"outline"};
+                          const tg=def.tone==="danger"?"#A8392E":def.tone==="warning"?"#C4843A":"#6B6E7B";
+                          const tgs=def.tone==="danger"?"#F2D7CD":def.tone==="warning"?"#F4E7CE":"#ECE4D2";
+                          return (
+                            <div key={e.id} style={{padding:"8px 10px",border:"1px solid var(--hairline)",borderRadius:8,background:"var(--paper)",fontSize:11.5}}>
+                              <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:2}}>
+                                <span style={{padding:"1px 6px",borderRadius:999,background:tgs,color:tg,fontSize:9.5,fontWeight:700,letterSpacing:".06em"}}>{def.short}</span>
+                                <span style={{fontWeight:500}}>{e.staffName.split(" ")[0]}</span>
+                                <span className="mono" style={{color:"var(--muted)",fontSize:10}}>· {policyFmtTs(e.ts)}</span>
+                                <span className="spacer" style={{flex:1}}></span>
+                                <span className="mono" style={{color:"var(--muted)",fontSize:9.5}}>{e.id}</span>
+                              </div>
+                              <div style={{color:"var(--ink-2)",fontSize:11,lineHeight:1.4}}>{e.detail}</div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{display:"flex",gap:8,marginTop:14,paddingTop:12,borderTop:"1px solid var(--hairline)"}}>
+                  <button className="btn"><I n="report" s={13}/>{t("Export team report (PDF)","ສົ່ງອອກ PDF")}</button>
+                  <button className="btn ghost"><I n="bell" s={13}/>{t("Send reminder to flagged staff","ສົ່ງແຈ້ງເຕືອນ")}</button>
+                  <span className="spacer" style={{flex:1}}></span>
+                  <span style={{color:"var(--muted)",fontSize:11.5,alignSelf:"center"}}>
+                    {t(`${teamTotal} incidents this period · same data as HR Analytics`,`ມີ ${teamTotal} ຄັ້ງ`)}
+                  </span>
+                </div>
+              </div>
+              );
+            })()}
+
             {/* Performance */}
             <div className="card col-7">
               <div className="card-h"><div><div className="card-t">{t("Performance · top of team","ການປະເມີນ ລະດັບສູງ")}</div><div className="card-s">H1 2025 · {t("Objectives + attendance + safety","ເປົ້າ + ມາວຽກ + ປອດໄພ")}</div></div><a className="card-act">{t("Open all reviews","ເບິ່ງທັງໝົດ")}</a></div>
@@ -384,13 +563,13 @@ function App(){
               <div className="card-h"><div><div className="card-t">{t("Approval workflow","ຂັ້ນຕອນອະນຸມັດ")}</div><div className="card-s">LV-2025-0902 · Souksavanh P.</div></div></div>
               <div className="wf">
                 <div className="wf-step on"><span className="c"><I n="check" s={11}/></span>{t("Submitted","ສົ່ງ")}</div>
-                <div style={{color:"var(--muted-2)"}}>›</div>
+                <div aria-hidden="true" style={{color:"var(--muted-2)"}}>›</div>
                 <div className="wf-step on"><span className="c">M</span>{t("Manager · You","ຫົວໜ້າ")}</div>
-                <div style={{color:"var(--muted-2)"}}>›</div>
+                <div aria-hidden="true" style={{color:"var(--muted-2)"}}>›</div>
                 <div className="wf-step"><span className="c">D</span>{t("Plant Director","ຫົວໜ້າໂຮງງານ")}</div>
-                <div style={{color:"var(--muted-2)"}}>›</div>
+                <div aria-hidden="true" style={{color:"var(--muted-2)"}}>›</div>
                 <div className="wf-step"><span className="c">H</span>{t("HR Records","HR")}</div>
-                <div style={{color:"var(--muted-2)"}}>›</div>
+                <div aria-hidden="true" style={{color:"var(--muted-2)"}}>›</div>
                 <div className="wf-step"><span className="c">P</span>{t("Posted","ບັນທຶກ")}</div>
               </div>
               <div style={{marginTop:14,padding:"10px 12px",background:"var(--paper)",border:"1px solid var(--hairline)",borderRadius:10,fontSize:12.5}}>
@@ -404,7 +583,7 @@ function App(){
             </div>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   </div>;
 }

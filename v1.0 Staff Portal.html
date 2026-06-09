@@ -356,6 +356,17 @@
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 
   <script type="text/babel" src="src/ios-frame.jsx"></script>
-  <script type="text/babel" src="src/portal.jsx"></script>
+  <!-- shared policy data — same module loaded by HR · Manager · Web Staff portals -->
+  <script type="text/babel" src="src/policy-ledger.jsx"></script>
+  <!-- portal split into per-screen modules. Order matters: globals via script load order. -->
+  <script type="text/babel" src="src/portal/icons.jsx"></script>
+  <script type="text/babel" src="src/portal/chrome.jsx"></script>
+  <script type="text/babel" src="src/portal/home.jsx"></script>
+  <script type="text/babel" src="src/portal/leave.jsx"></script>
+  <script type="text/babel" src="src/portal/pay.jsx"></script>
+  <script type="text/babel" src="src/portal/helpdesk.jsx"></script>
+  <script type="text/babel" src="src/portal/services.jsx"></script>
+  <script type="text/babel" src="src/portal/wiring.jsx"></script>
+  <script type="text/babel" src="src/portal/app.jsx"></script>
 </body>
 </html>

@@ -3,26 +3,48 @@
 <head>
 <meta charset="utf-8" />
 <title>Mobile Personas — Staff · Manager · HR</title>
-<meta name="viewport" content="width=1440, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#F4EFE5" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Noto+Sans+Lao:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
   :root{
-    --bg:#F4EFE5;--paper:#FBF8F1;--ink:#14182A;--ink-2:#2A2F45;--muted:#6B6E7B;--muted-2:#8B8E99;
+    color-scheme:light;
+    --bg:#F4EFE5;--paper:#FBF8F1;--ink:#14182A;--ink-2:#2A2F45;
+    /* a11y: darkened for AA */
+    --muted:#5C5F6B;--muted-2:#6B6E7B;
     --hairline:#E5DECC;--bg-deep:#ECE4D2;
+    /* Persona accents — kept for in-page tinting; canonical aliases below for cross-portal sharing */
     --staff:#C4843A;--staff-soft:#F4E7CE;
     --mgr:#2E6F47;--mgr-soft:#DDEAD8;
     --hr:#1A2A57;--hr-soft:#E5E8F2;
+    /* Canonical (semantic) aliases — same hexes as --staff/--mgr/--hr */
+    --primary:#1A2A57;--primary-soft:#E5E8F2;
+    --accent:#C4843A;--accent-text:#7A5219;--accent-soft:#F4E7CE;
     --positive:#2E6F47;--positive-soft:#DDEAD8;
-    --warning:#B5832B;--warning-soft:#F6E9C8;
+    --warning:#8C6320;--warning-soft:#F6E9C8;
     --danger:#A8392E;--danger-soft:#F2D7CD;
+    --space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:20px;--space-6:24px;--space-7:32px;--space-8:40px;
+    --radius-sm:8px;--radius-md:12px;--radius-lg:14px;--radius-xl:18px;--radius-pill:999px;
+    --shadow-card:0 1px 2px rgba(20,24,42,.04),0 4px 12px rgba(20,24,42,.06);
+    --shadow-pop:0 18px 34px -16px rgba(20,24,42,.18);
+    --shadow-overlay:0 24px 60px -16px rgba(20,24,42,.32);
+    --fs-xs:11px;--fs-sm:12px;--fs-base:13.5px;--fs-md:14px;--fs-lg:16px;--fs-xl:18px;--fs-2xl:22px;--fs-display:28px;--fs-display-lg:44px;
+    --motion-fast:120ms;--motion-base:200ms;--motion-slow:320ms;--ease-standard:cubic-bezier(.2,.0,.2,1);
     --font-ui:"Instrument Sans",ui-sans-serif,system-ui,sans-serif;
     --font-display:"Instrument Serif",serif;
     --font-mono:"JetBrains Mono",ui-monospace,monospace;
     --font-lao:"Noto Sans Lao","Instrument Sans",sans-serif;
   }
   *{box-sizing:border-box}html,body{margin:0;padding:0}
+  /* Reset button chrome on semantic-wrapper buttons (icon pills, quick actions, hero stats) */
+  button{font:inherit;color:inherit}
+  button.qa-i,button.ic-pill,button.hero-stat,button.col-h{text-align:left;cursor:pointer}
+  :where(button,a,[role="button"],input,select,textarea,[tabindex]):focus-visible{outline:2px solid var(--primary);outline-offset:2px;border-radius:4px}
+  .skip-link{position:absolute;left:8px;top:8px;background:var(--primary);color:#fff;padding:8px 12px;border-radius:var(--radius-sm);text-decoration:none;font-weight:600;font-size:var(--fs-sm);transform:translateY(-200%);transition:transform var(--motion-base) var(--ease-standard);z-index:100}
+  .skip-link:focus{transform:translateY(0)}
+  @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
   body{font-family:var(--font-ui);background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh}
   .lao{font-family:var(--font-lao)}.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
   .stage{padding:36px 32px 80px;max-width:1480px;margin:0 auto}
@@ -171,10 +193,16 @@
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to main content</a>
 <div id="root"></div>
-<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<noscript><div style="padding:24px;font-family:system-ui">Enable JavaScript to view the mobile personas.</div></noscript>
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<!-- Shared policy data — same source as HR · Manager · Staff -->
+<script type="text/babel" src="src/policy-ledger.jsx"></script>
+<!-- Shared UI primitives (formatLAK, Alert, KPI, StatusPill, policyToneColors) -->
+<script type="text/babel" src="src/portal-ui.jsx"></script>
 <script type="text/babel">
 const I=({n,s=16,c="currentColor",w=1.7})=>{const P={
 home:<><path d="M3 11l9-7 9 7M5 10v10h14V10"/></>,
@@ -197,31 +225,37 @@ spark:<><path d="M12 3v6M12 15v6M3 12h6M15 12h6"/></>,
 eye:<><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></>,
 plus:<><path d="M12 5v14M5 12h14"/></>,
 finger:<><path d="M9 20v-3M9 17a3 3 0 0 1-3-3v-3a6 6 0 1 1 12 0v6.5"/></>,
-};return <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth={w} strokeLinecap="round" strokeLinejoin="round">{P[n]}</svg>;};
+};return <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth={w} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">{P[n]}</svg>;};
 
-const StatusBar=()=><div className="status">
+// Frozen const maps — TONE_FG/TONE_BG/policyToneColors come from portal-ui.jsx (window.*)
+const TABS=Object.freeze({HOME:"home",ALERTS:"alerts",APPROVALS:"approvals",ME:"me",TEAM:"team"});
+
+const StatusBar=()=><div className="status" aria-hidden="true">
   <span>9:41</span>
   <span className="status-r">
-    <svg width="16" height="11" viewBox="0 0 16 11" fill="currentColor"><path d="M1 7h2v3H1zM5 5h2v5H5zM9 3h2v7H9zM13 1h2v9h-2z"/></svg>
-    <svg width="14" height="10" viewBox="0 0 14 10" fill="none" stroke="currentColor" strokeWidth="1.4"><path d="M1 4.5C2.5 3 4.5 2 7 2s4.5 1 6 2.5M3 6.5C4 5.7 5.4 5 7 5s3 .7 4 1.5M7 8.2v.1"/></svg>
-    <svg width="22" height="10" viewBox="0 0 22 10" fill="none" stroke="currentColor" strokeWidth="1"><rect x="0.5" y="0.5" width="18" height="9" rx="2"/><rect x="2" y="2" width="13" height="6" rx="1" fill="currentColor"/><rect x="19.5" y="3" width="1.5" height="4" rx="0.5" fill="currentColor"/></svg>
+    <svg width="16" height="11" viewBox="0 0 16 11" fill="currentColor" aria-hidden="true" focusable="false"><path d="M1 7h2v3H1zM5 5h2v5H5zM9 3h2v7H9zM13 1h2v9h-2z"/></svg>
+    <svg width="14" height="10" viewBox="0 0 14 10" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true" focusable="false"><path d="M1 4.5C2.5 3 4.5 2 7 2s4.5 1 6 2.5M3 6.5C4 5.7 5.4 5 7 5s3 .7 4 1.5M7 8.2v.1"/></svg>
+    <svg width="22" height="10" viewBox="0 0 22 10" fill="none" stroke="currentColor" strokeWidth="1" aria-hidden="true" focusable="false"><rect x="0.5" y="0.5" width="18" height="9" rx="2"/><rect x="2" y="2" width="13" height="6" rx="1" fill="currentColor"/><rect x="19.5" y="3" width="1.5" height="4" rx="0.5" fill="currentColor"/></svg>
   </span>
 </div>;
 
-const Tabs=({tab,setTab,items})=><div className="tabs">{items.map(t=><button key={t.id} className={"tab"+(tab===t.id?" on":"")} onClick={()=>setTab(t.id)}>
+const Tabs=({tab,setTab,items,label})=><div className="tabs" role="tablist" aria-label={label||"Phone tabs"}>{items.map(t=><button key={t.id} role="tab" aria-selected={tab===t.id} aria-controls={`panel-${t.id}`} className={"tab"+(tab===t.id?" on":"")} onClick={()=>setTab(t.id)}>
   <I n={t.ic} s={18}/>{t.l}
 </button>)}</div>;
 
 /* ─── STAFF persona ─── */
 function StaffPhone(){
-  const [tab,setTab]=React.useState("home");
+  const [tab,setTab]=React.useState(TABS.HOME);
+  /* Quick view of own time-policy record · same ledger HR & Manager see */
+  const myPolicy=(typeof policyRollupForStaff==="function")?policyRollupForStaff("EMP-00427"):null;
+  const policyTone=myPolicy?policyToneColors(myPolicy.level.tone).fg:"#2E6F47";
   return <div className="phone"><div className="screen staff-mode">
     <div className="persona-band"/>
     <StatusBar/>
     {tab==="home"&&<div className="body">
       <div className="ph-h">
         <div><div className="ph-greet">Tue · 22 Jul</div><div className="ph-h-t">Sabaidee, Souk</div></div>
-        <div className="ph-h-r"><div className="ic-pill"><I n="bell" s={16}/><i className="dot"/></div><div className="ic-pill av">SP</div></div>
+        <div className="ph-h-r"><button type="button" className="ic-pill" aria-label="Notifications, unread"><I n="bell" s={16}/><i className="dot" aria-hidden="true"/></button><button type="button" className="ic-pill av" aria-label="Open profile menu — Souksavanh">SP</button></div>
       </div>
       <div className="hero">
         <div className="l">Net pay · July (est.)</div>
@@ -229,17 +263,17 @@ function StaffPhone(){
         <div className="s">PIT 412k · NSSF 273k · payday Fri 25</div>
         <div className="hero-row">
           <div className="hero-stat"><div className="ll">Leave</div><div className="vv">11.5<span className="uu">d</span></div></div>
-          <div className="hero-stat"><div className="ll">Tenure</div><div className="vv">3.2<span className="uu">y</span></div></div>
+          <button type="button" className="hero-stat" style={{cursor:"pointer",position:"relative",border:"none",background:"transparent",font:"inherit",textAlign:"left"}} aria-label={`Time policy — ${myPolicy?myPolicy.total:0} incidents, status ${myPolicy?myPolicy.level.label:"OK"}`}><span className="ll">Time policy</span><span className="vv">{myPolicy?myPolicy.total:0}<span className="uu" style={{display:"inline-flex",alignItems:"center",gap:4,marginLeft:4}}><span aria-hidden="true" style={{display:"inline-block",width:6,height:6,borderRadius:"50%",background:policyTone}}/>{myPolicy?myPolicy.level.label:"OK"}</span></span></button>
           <div className="hero-stat"><div className="ll">Perf H1</div><div className="vv">4.2<span className="uu">/5</span></div></div>
         </div>
       </div>
       <div>
         <div className="sec-h"><div className="sec-t">Quick actions</div></div>
         <div className="qa">
-          <div className="qa-i"><div className="ic"><I n="finger" s={16}/></div><div className="l">Clock in/out</div></div>
-          <div className="qa-i"><div className="ic"><I n="plane" s={15}/></div><div className="l">Apply leave</div></div>
-          <div className="qa-i"><div className="ic"><I n="wallet" s={15}/></div><div className="l">Payslip</div></div>
-          <div className="qa-i"><div className="ic"><I n="doc" s={15}/></div><div className="l">Letter</div></div>
+          <button type="button" className="qa-i" aria-label="Clock in/out"><span className="ic" aria-hidden="true"><I n="finger" s={16}/></span><span className="l">Clock in/out</span></button>
+          <button type="button" className="qa-i" aria-label="Apply leave"><span className="ic" aria-hidden="true"><I n="plane" s={15}/></span><span className="l">Apply leave</span></button>
+          <button type="button" className="qa-i" aria-label="View payslip"><span className="ic" aria-hidden="true"><I n="wallet" s={15}/></span><span className="l">Payslip</span></button>
+          <button type="button" className="qa-i" aria-label="Request letter"><span className="ic" aria-hidden="true"><I n="doc" s={15}/></span><span className="l">Letter</span></button>
         </div>
       </div>
       <div>
@@ -270,7 +304,7 @@ function StaffPhone(){
       </div>
     </div>}
     {tab==="approvals"&&<div className="body">
-      <div className="ph-h"><div><div className="ph-greet">My requests</div><div className="ph-h-t">Approvals</div></div><div className="ic-pill"><I n="plus" s={16}/></div></div>
+      <div className="ph-h"><div><div className="ph-greet">My requests</div><div className="ph-h-t">Approvals</div></div><button type="button" className="ic-pill" aria-label="New request"><I n="plus" s={16}/></button></div>
       <div className="c">
         <div className="c-row"><div className="c-av">LV</div><div className="c-body"><div className="c-nm">Annual leave</div><div className="c-sub">Aug 14–16 · 3 days · cover by Bounmy</div></div><span className="pill warn">Mgr</span></div>
         <div className="trail" style={{paddingLeft:42,marginTop:-2}}><span className="st on">Submit</span>›<span className="st on">Mgr</span>›<span className="st">Director</span>›<span className="st">HR</span></div>
@@ -311,34 +345,44 @@ function StaffPhone(){
         <div className="c-row"><div className="c-av"><I n="shield" s={14}/></div><div className="c-body"><div className="c-nm">Privacy & data</div><div className="c-sub">Manage what HR can see</div></div></div>
       </div>
     </div>}
-    <Tabs tab={tab} setTab={setTab} items={[
-      {id:"home",l:"Home",ic:"home"},{id:"alerts",l:"Alerts",ic:"bell"},{id:"approvals",l:"Requests",ic:"inbox"},{id:"me",l:"Me",ic:"me"}]}/>
+    <Tabs tab={tab} setTab={setTab} label="Staff phone tabs" items={[
+      {id:TABS.HOME,l:"Home",ic:"home"},{id:TABS.ALERTS,l:"Alerts",ic:"bell"},{id:TABS.APPROVALS,l:"Requests",ic:"inbox"},{id:TABS.ME,l:"Me",ic:"me"}]}/>
   </div></div>;
 }
 
 /* ─── MANAGER persona ─── */
 function ManagerPhone(){
-  const [tab,setTab]=React.useState("approvals");
+  const [tab,setTab]=React.useState(TABS.HOME);
+  /* Quick view of team policy compliance · same ledger HR & Staff see */
+  const rollup=(typeof policyRollupForManager==="function")?policyRollupForManager("EMP-00800"):{entries:[],monitoring:0,warned:0};
+  const teamEntries=rollup.entries;
+  const monitoring=rollup.monitoring;
+  const warned=rollup.warned;
   return <div className="phone"><div className="screen mgr-mode">
     <div className="persona-band"/>
     <StatusBar/>
     {tab==="home"&&<div className="body">
-      <div className="ph-h"><div><div className="ph-greet">Tue · 22 Jul</div><div className="ph-h-t">Khamla — your team</div></div><div className="ph-h-r"><div className="ic-pill"><I n="bell" s={16}/><i className="dot"/></div><div className="ic-pill av">KC</div></div></div>
+      <div className="ph-h"><div><div className="ph-greet">Tue · 22 Jul</div><div className="ph-h-t">Khamla — your team</div></div><div className="ph-h-r"><button type="button" className="ic-pill" aria-label="Notifications, unread"><I n="bell" s={16}/><i className="dot" aria-hidden="true"/></button><button type="button" className="ic-pill av" aria-label="Open profile menu — Khamla">KC</button></div></div>
       <div className="hero">
         <div className="l">Today on Bottling A</div>
         <div className="t">12 / 14 on shift</div>
         <div className="s">2 on leave · 1 late · OEE 87.4%</div>
         <div className="hero-row">
           <div className="hero-stat"><div className="ll">Pending</div><div className="vv">6</div></div>
+          {(()=>{const polTone=warned>0?"#A8392E":monitoring>0?"#C4843A":"#2E6F47";const polLbl=warned>0?`${warned} warned`:monitoring>0?`${monitoring} mon.`:"OK";return(
+          <button type="button" className="hero-stat" style={{cursor:"pointer",border:"none",background:"transparent",font:"inherit",textAlign:"left"}} aria-label={`Team policy compliance — ${teamEntries.length} incidents, ${polLbl}`}><span className="ll">Policy</span><span className="vv">{teamEntries.length}<span className="uu" style={{display:"inline-flex",alignItems:"center",gap:4,marginLeft:4}}><span aria-hidden="true" style={{display:"inline-block",width:6,height:6,borderRadius:"50%",background:polTone}}/>{polLbl}</span></span></button>
+          );})()}
           <div className="hero-stat"><div className="ll">Att.</div><div className="vv">85.7<span className="uu">%</span></div></div>
-          <div className="hero-stat"><div className="ll">Perf</div><div className="vv">4.1<span className="uu">/5</span></div></div>
         </div>
       </div>
       <div>
         <div className="sec-h"><div className="sec-t">Team alerts</div><span className="pill mgr">3</span></div>
         <div style={{display:"flex",flexDirection:"column",gap:8}}>
-          <div className="alert"><div className="al-mk dang"><I n="warn" s={14}/></div><div style={{flex:1}}><div className="al-t">Phetdara OT blocks payroll cut-off</div><div className="al-s">Approve before 17:00 · LV-0901</div></div></div>
-          <div className="alert"><div className="al-mk warn"><I n="clock" s={14}/></div><div style={{flex:1}}><div className="al-t">Manysone late (08:12) · 3rd this month</div><div className="al-s">1-on-1 suggested · open coaching plan</div></div></div>
+          <div className="alert"><div className="al-mk dang"><I n="warn" s={14}/></div><div style={{flex:1}}><div className="al-t">Phetdara OT blocks payroll cut-off</div><div className="al-s">Approve before 17:00 · LV-0901</div></div><div style={{display:"flex",flexDirection:"column",gap:4}}><button className="bt ok" style={{padding:"4px 8px",fontSize:11}}><I n="check" s={11}/></button></div></div>
+          {/* Manysone alert · driven by ledger count, with quick Coach action */}
+          {(()=>{const lateCount=(teamEntries.filter(e=>e.staffId==="EMP-00833"&&e.kind==="late")).length;return (
+          <div className="alert"><div className="al-mk warn"><I n="clock" s={14}/></div><div style={{flex:1}}><div className="al-t">Manysone late · {lateCount}× this month</div><div className="al-s">{policyStatus(lateCount).label} threshold · 1-on-1 suggested</div></div><div style={{display:"flex",flexDirection:"column",gap:4}}><button className="bt ok" style={{padding:"4px 8px",fontSize:10.5}}>Coach</button></div></div>
+          );})()}
           <div className="alert"><div className="al-mk pos"><I n="shield" s={14}/></div><div style={{flex:1}}><div className="al-t">Q2 Safety Champion: your team</div><div className="al-s">Recognition email scheduled Fri</div></div></div>
         </div>
       </div>
@@ -366,7 +410,7 @@ function ManagerPhone(){
       </div>
     </div>}
     {tab==="approvals"&&<div className="body">
-      <div className="ph-h"><div><div className="ph-greet">Inbox · 6</div><div className="ph-h-t">Approvals</div></div><div className="ic-pill"><I n="check" s={16}/></div></div>
+      <div className="ph-h"><div><div className="ph-greet">Inbox · 6</div><div className="ph-h-t">Approvals</div></div><button type="button" className="ic-pill" aria-label="Bulk approve"><I n="check" s={16}/></button></div>
       <div className="c">
         <div className="c-row"><div className="c-av">PT</div><div className="c-body"><div className="c-nm">Phetdara T. · Overtime</div><div className="c-sub">Aug 09 · 4h evening · ₭ 320k <span className="pill dang" style={{marginLeft:4}}>HIGH</span></div></div><div className="c-when">Due 17:00</div></div>
         <div className="c-sub" style={{marginTop:6}}>"Line A maintenance carry-over"</div>
@@ -404,26 +448,29 @@ function ManagerPhone(){
         <div className="c-row"><div className="c-av">PS</div><div className="c-body"><div className="c-nm">Phimphone S.</div><div className="c-sub">Quality · 4.0/5</div></div><span className="pill pos">Shift</span></div>
       </div>
     </div>}
-    <Tabs tab={tab} setTab={setTab} items={[
-      {id:"home",l:"Home",ic:"home"},{id:"approvals",l:"Approvals",ic:"inbox"},{id:"team",l:"Team",ic:"team"},{id:"alerts",l:"Alerts",ic:"bell"}]}/>
+    <Tabs tab={tab} setTab={setTab} label="Manager phone tabs" items={[
+      {id:TABS.HOME,l:"Home",ic:"home"},{id:TABS.APPROVALS,l:"Approvals",ic:"inbox"},{id:TABS.TEAM,l:"Team",ic:"team"},{id:TABS.ALERTS,l:"Alerts",ic:"bell"}]}/>
   </div></div>;
 }
 
 /* ─── HR persona ─── */
 function HRPhone(){
-  const [tab,setTab]=React.useState("home");
+  const [tab,setTab]=React.useState(TABS.HOME);
+  /* Org-wide policy snapshot · same ledger Manager & Staff see */
+  const ledger=(typeof POLICY_LEDGER!=="undefined")?POLICY_LEDGER:[];
+  const ledgerCount=ledger.length;
   return <div className="phone"><div className="screen hr-mode">
     <div className="persona-band"/>
     <StatusBar/>
     {tab==="home"&&<div className="body">
-      <div className="ph-h"><div><div className="ph-greet">Tue · 22 Jul · payroll D-3</div><div className="ph-h-t">Sirisak — HR ops</div></div><div className="ph-h-r"><div className="ic-pill"><I n="bell" s={16}/><i className="dot"/></div><div className="ic-pill av">SK</div></div></div>
+      <div className="ph-h"><div><div className="ph-greet">Tue · 22 Jul · payroll D-3</div><div className="ph-h-t">Sirisak — HR ops</div></div><div className="ph-h-r"><button type="button" className="ic-pill" aria-label="Notifications, unread"><I n="bell" s={16}/><i className="dot" aria-hidden="true"/></button><button type="button" className="ic-pill av" aria-label="Open profile menu — Sirisak">SK</button></div></div>
       <div className="hero">
         <div className="l">Org pulse · today</div>
         <div className="t">412 / 437</div>
         <div className="s">on shift · 18 leave · 7 absent · attrition 6.8%</div>
         <div className="hero-row">
           <div className="hero-stat"><div className="ll">Approvals</div><div className="vv">23</div></div>
-          <div className="hero-stat"><div className="ll">Tickets</div><div className="vv">11</div></div>
+          <button type="button" className="hero-stat" style={{cursor:"pointer",border:"none",background:"transparent",font:"inherit",textAlign:"left"}} aria-label={`Policy month-to-date — ${ledgerCount} incidents, down 8.2%`}><span className="ll">Policy MTD</span><span className="vv">{ledgerCount}<span className="uu" style={{display:"inline-flex",alignItems:"center",gap:4,marginLeft:4}}><span aria-hidden="true" style={{display:"inline-block",width:6,height:6,borderRadius:"50%",background:"#2E6F47"}}/>▼ 8.2%</span></span></button>
           <div className="hero-stat"><div className="ll">Compliance</div><div className="vv">94<span className="uu">%</span></div></div>
         </div>
       </div>
@@ -439,10 +486,10 @@ function HRPhone(){
       <div>
         <div className="sec-h"><div className="sec-t">Quick actions</div></div>
         <div className="qa">
-          <div className="qa-i"><div className="ic"><I n="inbox" s={15}/></div><div className="l">Approvals</div></div>
-          <div className="qa-i"><div className="ic"><I n="wallet" s={15}/></div><div className="l">Payroll run</div></div>
-          <div className="qa-i"><div className="ic"><I n="chat" s={15}/></div><div className="l">Helpdesk</div></div>
-          <div className="qa-i"><div className="ic"><I n="chart" s={15}/></div><div className="l">Analytics</div></div>
+          <button type="button" className="qa-i" aria-label="Open approvals queue"><span className="ic" aria-hidden="true"><I n="inbox" s={15}/></span><span className="l">Approvals</span></button>
+          <button type="button" className="qa-i" aria-label="Run payroll"><span className="ic" aria-hidden="true"><I n="wallet" s={15}/></span><span className="l">Payroll run</span></button>
+          <button type="button" className="qa-i" aria-label="Open HR helpdesk"><span className="ic" aria-hidden="true"><I n="chat" s={15}/></span><span className="l">Helpdesk</span></button>
+          <button type="button" className="qa-i" aria-label="Open analytics"><span className="ic" aria-hidden="true"><I n="chart" s={15}/></span><span className="l">Analytics</span></button>
         </div>
       </div>
     </div>}
@@ -459,7 +506,7 @@ function HRPhone(){
       </div>
     </div>}
     {tab==="approvals"&&<div className="body">
-      <div className="ph-h"><div><div className="ph-greet">23 awaiting</div><div className="ph-h-t">HR queue</div></div><div className="ic-pill"><I n="check" s={16}/></div></div>
+      <div className="ph-h"><div><div className="ph-greet">23 awaiting</div><div className="ph-h-t">HR queue</div></div><button type="button" className="ic-pill" aria-label="Bulk approve"><I n="check" s={16}/></button></div>
       <div className="mt-row">
         <div className="mt"><div className="l">Mgr-pending</div><div className="v">14</div><div className="s">Avg 8h SLA</div></div>
         <div className="mt"><div className="l">HR-pending</div><div className="v">9</div><div className="s">letters &amp; finance</div></div>
@@ -508,40 +555,40 @@ function HRPhone(){
         <div className="c-row"><div className="c-av"><I n="doc" s={14}/></div><div className="c-body"><div className="c-nm">Audit trail</div><div className="c-sub">All HR actions · 90d retention</div></div></div>
       </div>
     </div>}
-    <Tabs tab={tab} setTab={setTab} items={[
-      {id:"home",l:"Home",ic:"home"},{id:"approvals",l:"Queue",ic:"inbox"},{id:"alerts",l:"Alerts",ic:"bell"},{id:"me",l:"Me",ic:"me"}]}/>
+    <Tabs tab={tab} setTab={setTab} label="HR phone tabs" items={[
+      {id:TABS.HOME,l:"Home",ic:"home"},{id:TABS.APPROVALS,l:"Queue",ic:"inbox"},{id:TABS.ALERTS,l:"Alerts",ic:"bell"},{id:TABS.ME,l:"Me",ic:"me"}]}/>
   </div></div>;
 }
 
 function App(){
-  return <div className="stage">
-    <div className="stage-h">
+  return <main id="main" className="stage">
+    <header className="stage-h">
       <div>
         <div className="eb">v1.0 · Mobile</div>
         <h1 className="t">One app · three perspectives</h1>
         <div className="s">Tap the tabs inside each phone to explore Home, Alerts, Approvals and personal metrics tailored per role. Same design language, role-aware colour and information density.</div>
       </div>
-      <div className="legend">
+      <div className="legend" aria-hidden="true">
         <span><i style={{background:"#C4843A"}}/>Staff · ESS</span>
         <span><i style={{background:"#2E6F47"}}/>Manager · Team</span>
         <span><i style={{background:"#1A2A57"}}/>HR · Admin</span>
       </div>
-    </div>
+    </header>
     <div className="row">
-      <div className="col">
-        <div className="col-h staff"><div className="badge">S</div><div><div className="nm">Souksavanh P.</div><div className="sb">Staff · ESS</div></div></div>
+      <section className="col" aria-labelledby="persona-staff">
+        <header className="col-h staff"><div className="badge" aria-hidden="true">S</div><div><h2 className="nm" id="persona-staff" style={{margin:0,fontSize:"inherit",fontWeight:600}}>Souksavanh P.</h2><div className="sb">Staff · ESS</div></div></header>
         <StaffPhone/>
-      </div>
-      <div className="col">
-        <div className="col-h mgr"><div className="badge">M</div><div><div className="nm">Khamla C.</div><div className="sb">Team Manager</div></div></div>
+      </section>
+      <section className="col" aria-labelledby="persona-mgr">
+        <header className="col-h mgr"><div className="badge" aria-hidden="true">M</div><div><h2 className="nm" id="persona-mgr" style={{margin:0,fontSize:"inherit",fontWeight:600}}>Khamla C.</h2><div className="sb">Team Manager</div></div></header>
         <ManagerPhone/>
-      </div>
-      <div className="col">
-        <div className="col-h hr"><div className="badge">H</div><div><div className="nm">Sirisak K.</div><div className="sb">HR Admin</div></div></div>
+      </section>
+      <section className="col" aria-labelledby="persona-hr">
+        <header className="col-h hr"><div className="badge" aria-hidden="true">H</div><div><h2 className="nm" id="persona-hr" style={{margin:0,fontSize:"inherit",fontWeight:600}}>Sirisak K.</h2><div className="sb">HR Admin</div></div></header>
         <HRPhone/>
-      </div>
+      </section>
     </div>
-  </div>;
+  </main>;
 }
 ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 </script>

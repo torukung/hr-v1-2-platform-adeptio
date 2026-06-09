@@ -17,16 +17,16 @@ const NAV = [
   { id: "dashboard", label: "Dashboard", lao: "ໜ້າຫຼັກ", icon: "dashboard" },
   { id: "approvals", label: "Approvals", lao: "ຄຳຮ້ອງ", icon: "leave", count: 23 },
 
-  { section: "PEOPLE" },
+  { section: "PEOPLE — P1 / P2" },
   { id: "staff", label: "Staff Records", lao: "ຂໍ້ມູນພະນັກງານ", icon: "users", count: 1248 },
   { id: "leave", label: "Leave & ESS", lao: "ການລາພັກ & ESS", icon: "leave" },
   { id: "documents", label: "Documents & Vault", lao: "ເອກະສານ", icon: "file" },
 
-  { section: "WORKFORCE" },
+  { section: "WORKFORCE — P3 / P4" },
   { id: "time", label: "Time & Attendance", lao: "ເວລາ & ການປະຈຳການ", icon: "clock" },
   { id: "payroll", label: "Payroll", lao: "ເງິນເດືອນ", icon: "payroll" },
 
-  { section: "TRUST & INTELLIGENCE" },
+  { section: "TRUST & INTELLIGENCE — P5 / P6" },
   { id: "biometric", label: "Biometric & SSO", lao: "ຊີວະພາບ & SSO", icon: "biometric" },
   { id: "analytics", label: "Analytics", lao: "ການວິເຄາະ", icon: "chart" },
 
@@ -48,7 +48,7 @@ const SCREEN_TITLES = {
   time:      { en: "Time & Attendance", lo: "ເວລາ & ການປະຈຳການ", sub: "Live attendance board · web · mobile · kiosk · biometric · offline sync." },
   payroll:   { en: "Payroll", lo: "ເງິນເດືອນ", sub: "Configurable pay codes · Lao PIT + NSSF · TH benchmark library." },
   biometric: { en: "Biometric & SSO", lo: "ຊີວະພາບ & SSO", sub: "Multi-modal capture · liveness · federated SSO with revocation." },
-  analytics: { en: "Analytics", lo: "ການວິເຄາະ", sub: "Cross-module exec dashboards · attrition · cost-to-serve · cross-border alerts." },
+  analytics: { en: "Analytics", lo: "ການວິເຄາະ", sub: "Time-policy compliance · top offenders · 12-week trend · scheduled exports." },
   cms:       { en: "Communications", lo: "ຂ່າວສານພະນັກງານ", sub: "Bilingual EN · LO authoring for every staff-facing message." },
   policies:  { en: "Policies & Documents", lo: "ນະໂຍບາຍ", sub: "Versioned, bilingual, role-aware policy library." },
   workflows: { en: "Workflow Builder", lo: "ການອອກແບບຂັ້ນຕອນ", sub: "No-code drag-and-drop · approval chains · escalation rules." },
@@ -56,48 +56,38 @@ const SCREEN_TITLES = {
 };
 
 function Sidebar({ active, setActive }) {
-  let currentSection = "WORKSPACE";
   return (
     <aside className="sidebar">
       <div className="sidebar-brand">
-        <div className="mark" aria-hidden="true">H</div>
+        <div className="mark">H</div>
         <div style={{ minWidth: 0 }}>
           <div className="name">HR System <span style={{ color: "var(--muted)", fontSize: 11, fontWeight: 400 }}>v1.0</span></div>
           <div className="tenant">Lao Beverage Co., Ltd.</div>
         </div>
       </div>
-      <nav aria-label="HR sections" style={{ flex: 1, overflowY: "auto", paddingBottom: 12 }}>
-        {NAV.map((n, i) => {
-          if (n.section) {
-            currentSection = n.section;
-            return <div key={i} className="sidebar-section" role="presentation">{n.section}</div>;
-          }
-          const isActive = active === n.id;
-          return (
-            <button key={n.id}
-              type="button"
-              className={`nav-item ${isActive ? "active" : ""}`}
-              aria-current={isActive ? "page" : undefined}
-              onClick={() => setActive(n.id)}>
-              <Icon name={n.icon} className="ico" aria-hidden="true" />
-              <span>{n.label}</span>
-              {n.count != null && (
-                <span className="count num" aria-label={`${n.count.toLocaleString()} items`}>
-                  {n.count.toLocaleString()}
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </nav>
+      <div style={{ flex: 1, overflowY: "auto", paddingBottom: 12 }}>
+        {NAV.map((n, i) =>
+          n.section
+            ? <div key={i} className="sidebar-section">{n.section}</div>
+            : (
+              <div key={n.id}
+                className={`nav-item ${active === n.id ? "active" : ""}`}
+                onClick={() => setActive(n.id)}>
+                <Icon name={n.icon} className="ico" />
+                <span>{n.label}</span>
+                {n.count != null && <span className="count num">{n.count.toLocaleString()}</span>}
+              </div>
+            )
+        )}
+      </div>
       <div className="sidebar-footer">
         <Avatar name="Khamphet Vannasing" />
         <div className="user-meta" style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontSize: 12.5, fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>K. Vannasing</div>
           <div className="role">HR Director · Vientiane</div>
         </div>
-        <button className="icon-btn" aria-label="Sign out" title="Sign out" style={{ width: 36, height: 36 }}>
-          <Icon name="chevron" size={14} aria-hidden="true" />
+        <button className="icon-btn" title="Sign out" style={{ width: 28, height: 28 }}>
+          <Icon name="chevron" size={14} />
         </button>
       </div>
     </aside>
@@ -108,56 +98,39 @@ function Topbar({ active, lang, setLang }) {
   const here = SCREEN_TITLES[active] || SCREEN_TITLES.dashboard;
   return (
     <>
-      <a href="#main-content" className="skip-link">Skip to main content</a>
-      <header className="topbar">
-        <nav aria-label="Breadcrumb" className="crumbs">
-          <Icon name="home" size={14} aria-hidden="true" />
+      <div className="topbar">
+        <div className="crumbs">
+          <Icon name="home" size={14} />
           <span>HR Console</span>
-          <span className="sep" aria-hidden="true">/</span>
-          <span className="here" aria-current="page">{lang === "lo" ? here.lo : here.en}</span>
-        </nav>
-        <div className="search" role="search">
-          <Icon name="search" size={14} aria-hidden="true" />
-          <label htmlFor="hr-search" className="visually-hidden">
-            Search staff, requests, policies, payroll runs
-          </label>
-          <input
-            id="hr-search"
-            type="search"
-            placeholder="Search staff, requests, policies, payroll runs…"
-            aria-label="Search staff, requests, policies, payroll runs"
-          />
-          <span className="kbd" aria-hidden="true">⌘K</span>
+          <span className="sep">/</span>
+          <span className="here">{lang === "lo" ? here.lo : here.en}</span>
         </div>
-        <div className="lang-switch" role="group" aria-label="Language">
-          <button
-            type="button"
-            className={lang === "en" ? "on" : ""}
-            aria-pressed={lang === "en"}
-            onClick={() => setLang("en")}>EN</button>
-          <button
-            type="button"
-            className={lang === "lo" ? "on" : ""}
-            aria-pressed={lang === "lo"}
-            onClick={() => setLang("lo")}>ລາວ</button>
+        <div className="search">
+          <Icon name="search" size={14} />
+          <input placeholder="Search staff, requests, policies, payroll runs…" />
+          <span className="kbd">⌘K</span>
         </div>
-        <button type="button" className="icon-btn" aria-label="Notifications (1 unread)" title="Notifications">
-          <Icon name="bell" size={16} aria-hidden="true" />
-          <span className="dot" aria-hidden="true"></span>
+        <div className="lang-switch">
+          <button className={lang === "en" ? "on" : ""} onClick={() => setLang("en")}>EN</button>
+          <button className={lang === "lo" ? "on" : ""} onClick={() => setLang("lo")}>ລາວ</button>
+        </div>
+        <button className="icon-btn" title="Notifications">
+          <Icon name="bell" size={16} />
+          <span className="dot"></span>
         </button>
-        <button type="button" className="icon-btn" aria-label="Open AI HR chatbot" title="AI HR chatbot">
-          <Icon name="sparkle" size={16} aria-hidden="true" />
+        <button className="icon-btn" title="AI HR chatbot">
+          <Icon name="sparkle" size={16} />
         </button>
-      </header>
-      <div id="main-content" tabIndex="-1" style={{ padding: "22px 26px 0", maxWidth: 1400 }}>
+      </div>
+      <div style={{ padding: "22px 26px 0", maxWidth: 1400 }}>
         <div className="page-head">
           <div>
             <h1 className="page-title">{lang === "lo" ? here.lo : here.en}</h1>
             <div className="page-sub">{here.sub}</div>
           </div>
           <div className="row" style={{ gap: 8 }}>
-            <Pill tone="outline"><Icon name="globe" size={11} aria-hidden="true" /> EN · ລາວ</Pill>
-            <Pill tone="positive"><span className="d" aria-hidden="true"></span> All systems operational</Pill>
+            <Pill tone="outline"><Icon name="globe" size={11} /> EN · ລາວ</Pill>
+            <Pill tone="positive"><span className="d"></span> All systems operational</Pill>
           </div>
         </div>
       </div>

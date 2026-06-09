@@ -1,44 +1,6 @@
 /* Reusable UI primitives — kept inline-styled-ish via classes defined here. */
 
 const uiCSS = `
-/* ---------- A11y primitives ---------- */
-.visually-hidden {
-  position: absolute !important;
-  width: 1px; height: 1px;
-  padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
-}
-.skip-link {
-  position: absolute; top: -40px; left: 12px;
-  background: var(--ink); color: var(--paper);
-  padding: 8px 14px; border-radius: var(--r-md);
-  font-size: 13px; font-weight: 600;
-  text-decoration: none; z-index: 100;
-  transition: top 120ms ease;
-}
-.skip-link:focus { top: 12px; outline: 2px solid var(--accent); outline-offset: 2px; }
-
-/* Global focus-visible — applies to every interactive element */
-:focus { outline: none; }
-button:focus-visible,
-a:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible,
-[tabindex]:focus-visible,
-[role="button"]:focus-visible,
-[role="tab"]:focus-visible {
-  outline: 2px solid var(--ink-2);
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-.nav-item:focus-visible { outline-offset: -2px; border-radius: var(--r-md); }
-.nav-item.active:focus-visible { outline-color: var(--paper); }
-
-@media (prefers-reduced-motion: reduce) {
-  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
-}
-
 /* ---------- Layout shell ---------- */
 .app {
   display: grid;
@@ -69,22 +31,16 @@ textarea:focus-visible,
 .sidebar-brand .tenant { color: var(--muted); font-size: 11.5px; line-height: 1.2; }
 .sidebar-section {
   padding: 14px 14px 4px;
-  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--muted); font-weight: 600;
+  font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--muted-2); font-weight: 500;
 }
 .nav-item {
   display: flex; align-items: center; gap: 10px;
-  margin: 1px 8px; padding: 9px 10px;
+  margin: 1px 8px; padding: 8px 10px;
   border-radius: var(--r-md); color: var(--ink-2);
   cursor: pointer; user-select: none;
   font-size: 13.5px; font-weight: 500;
   position: relative;
-  width: calc(100% - 16px);
-  text-align: left;
-  background: transparent;
-  border: 0;
-  font-family: inherit;
-  min-height: 36px;
 }
 .nav-item:hover { background: var(--bg-deep); }
 .nav-item.active { background: var(--primary); color: var(--paper); }
@@ -133,14 +89,9 @@ textarea:focus-visible,
   padding: 6px 10px;
 }
 .search input {
-  background: transparent; border: 0; flex: 1; font-size: 13px;
-  outline: none;
+  background: transparent; border: 0; outline: none; flex: 1; font-size: 13px;
 }
-.search:focus-within {
-  background: var(--surface);
-  border-color: var(--ink-2);
-  box-shadow: 0 0 0 2px var(--ink-2);
-}
+.search:focus-within { background: var(--surface); border-color: var(--hairline-strong); }
 .search .kbd {
   font-family: var(--font-mono); font-size: 11px; color: var(--muted);
   background: var(--surface); border: 1px solid var(--hairline);
@@ -148,19 +99,19 @@ textarea:focus-visible,
 }
 
 .lang-switch {
-  display: inline-flex; padding: 3px;
+  display: inline-flex; padding: 2px;
   background: var(--bg-deep); border-radius: 999px;
 }
 .lang-switch button {
   border: 0; background: transparent;
-  padding: 7px 14px; min-height: 32px; border-radius: 999px;
-  font-size: 12.5px; font-weight: 600; color: var(--muted);
+  padding: 4px 10px; border-radius: 999px;
+  font-size: 12px; font-weight: 600; color: var(--muted);
   cursor: pointer; letter-spacing: 0.04em;
 }
 .lang-switch button.on { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-sm); }
 
 .icon-btn {
-  width: 36px; height: 36px; border-radius: var(--r-md);
+  width: 34px; height: 34px; border-radius: var(--r-md);
   border: 1px solid transparent;
   background: transparent; color: var(--ink-2);
   display: grid; place-items: center; cursor: pointer;
@@ -215,9 +166,7 @@ textarea:focus-visible,
 .card-title {
   font-size: 12px; font-weight: 600; letter-spacing: 0.06em;
   text-transform: uppercase; color: var(--muted);
-  margin: 0;
 }
-h2.card-title, h3.card-title { font-family: inherit; }
 .card-sub { color: var(--muted); font-size: 12px; }
 
 /* ---------- KPI ---------- */
@@ -253,13 +202,13 @@ h2.card-title, h3.card-title { font-family: inherit; }
   margin-bottom: 16px;
 }
 .seg {
-  display: inline-flex; padding: 3px;
+  display: inline-flex; padding: 2px;
   background: var(--surface); border: 1px solid var(--hairline);
   border-radius: 999px;
 }
 .seg button {
   border: 0; background: transparent;
-  padding: 8px 14px; min-height: 32px; border-radius: 999px;
+  padding: 5px 11px; border-radius: 999px;
   font-size: 12.5px; font-weight: 500; color: var(--muted);
   cursor: pointer;
 }

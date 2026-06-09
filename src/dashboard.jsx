@@ -32,6 +32,9 @@ function Dashboard({ lang, timeframe, setTimeframe, division, setDivision }) {
         <button className="btn"><Icon name="download" /> Export</button>
       </div>
 
+      {/* Today's attendance — hero tile (biometric + manual punches roll up here) */}
+      <TodayAttendance />
+
       {/* KPI grid */}
       <div className="kpi-grid">
         <KPI label="Headcount" value={k.headcount.toLocaleString()} delta={k.headcountDelta} suffix="" foot={`${tfLabel} · ${divObj.name}`} />
@@ -49,7 +52,7 @@ function Dashboard({ lang, timeframe, setTimeframe, division, setDivision }) {
         <div className="card">
           <div className="card-h">
             <div>
-              <h2 className="card-title">Headcount trend</h2>
+              <div className="card-title">Headcount trend</div>
               <div className="card-sub">Trailing 12 months · all divisions</div>
             </div>
             <div className="row">
@@ -62,7 +65,7 @@ function Dashboard({ lang, timeframe, setTimeframe, division, setDivision }) {
         <div className="card">
           <div className="card-h">
             <div>
-              <h2 className="card-title">By division</h2>
+              <div className="card-title">By division</div>
               <div className="card-sub">Active staff</div>
             </div>
           </div>
@@ -75,7 +78,7 @@ function Dashboard({ lang, timeframe, setTimeframe, division, setDivision }) {
         <div className="card">
           <div className="card-h">
             <div>
-              <h2 className="card-title">Attendance density</h2>
+              <div className="card-title">Attendance density</div>
               <div className="card-sub">Last 5 weeks · % present</div>
             </div>
           </div>
@@ -85,7 +88,7 @@ function Dashboard({ lang, timeframe, setTimeframe, division, setDivision }) {
         <div className="card">
           <div className="card-h">
             <div>
-              <h2 className="card-title">Leave mix</h2>
+              <div className="card-title">Leave mix</div>
               <div className="card-sub">{tfLabel} · open requests</div>
             </div>
           </div>
@@ -106,7 +109,7 @@ function Dashboard({ lang, timeframe, setTimeframe, division, setDivision }) {
         <div className="card">
           <div className="card-h">
             <div>
-              <h2 className="card-title">Statutory &amp; ops</h2>
+              <div className="card-title">Statutory & ops</div>
               <div className="card-sub">Lao + cross-border</div>
             </div>
           </div>
@@ -135,7 +138,7 @@ function Dashboard({ lang, timeframe, setTimeframe, division, setDivision }) {
         <div className="card" style={{ padding: 0 }}>
           <div className="card-h" style={{ padding: "16px 18px 0" }}>
             <div>
-              <h2 className="card-title">Approvals queue</h2>
+              <div className="card-title">Approvals queue</div>
               <div className="card-sub">{k.pendingApprovals} pending · sorted by submission time</div>
             </div>
             <div className="row">
@@ -167,8 +170,8 @@ function Dashboard({ lang, timeframe, setTimeframe, division, setDivision }) {
                     {" "}{a.submitted}
                   </td>
                   <td style={{ width: 1, whiteSpace: "nowrap" }}>
-                    <button type="button" className="btn sm ghost" aria-label={`Reject request from ${a.name}`} title="Reject"><Icon name="x" size={14} aria-hidden="true" /></button>{" "}
-                    <button type="button" className="btn sm primary" aria-label={`Approve request from ${a.name}`} title="Approve"><Icon name="check" size={14} aria-hidden="true" /> Approve</button>
+                    <button className="btn sm ghost" title="Reject"><Icon name="x" size={14} /></button>{" "}
+                    <button className="btn sm primary" title="Approve"><Icon name="check" size={14} /> Approve</button>
                   </td>
                 </tr>
               ))}
@@ -179,7 +182,7 @@ function Dashboard({ lang, timeframe, setTimeframe, division, setDivision }) {
         <div className="card">
           <div className="card-h">
             <div>
-              <h2 className="card-title">Upcoming</h2>
+              <div className="card-title">Upcoming</div>
               <div className="card-sub">Next 45 days</div>
             </div>
           </div>
@@ -213,6 +216,120 @@ function Dashboard({ lang, timeframe, setTimeframe, division, setDivision }) {
                 <Icon name={ic} size={11} stroke={1.6} /> {t}
               </span>
             ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* Daily attendance hero — first thing HR sees on Pulse */
+function TodayAttendance() {
+  const a = ATTENDANCE_TODAY;
+  const pct = (a.present / a.total) * 100;
+  const max = Math.max(...a.hourly, 1);
+
+  return (
+    <div className="card" style={{ marginBottom: 18, padding: 0, overflow: "hidden" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1.1fr 1.4fr 1fr", gap: 0 }}>
+
+        {/* Left: hero number + breakdown */}
+        <div style={{ padding: "18px 22px", borderRight: "1px solid var(--hairline)", background: "linear-gradient(180deg, var(--paper) 0%, var(--bg) 100%)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div className="card-sub" style={{ fontSize: 11, letterSpacing: ".12em", textTransform: "uppercase", color: "var(--muted)", fontWeight: 600 }}>Today's attendance</div>
+            <span className="spacer"></span>
+            <Pill tone="positive"><span className="d"></span> Live · biometric uptime {(a.biometricUptime*100).toFixed(1)}%</Pill>
+          </div>
+          <div style={{ color: "var(--ink-2)", fontSize: 12.5, marginTop: 4 }}>{a.date}</div>
+
+          <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginTop: 12 }}>
+            <div className="serif num" style={{ fontSize: 40, lineHeight: 1, fontStyle: "italic" }}>{a.present.toLocaleString()}</div>
+            <div className="num" style={{ fontSize: 16, color: "var(--muted)" }}>/ {a.total.toLocaleString()}</div>
+            <Pill tone="primary">{pct.toFixed(1)}%</Pill>
+          </div>
+          <div style={{ color: "var(--muted)", fontSize: 12, marginTop: 2 }}>present across all sites</div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 14 }}>
+            {[
+              { l: "Late",     v: a.late,    tone: "warning" },
+              { l: "Absent",   v: a.absent,  tone: "danger" },
+              { l: "On leave", v: a.onLeave, tone: "primary" },
+              { l: "Early-out",v: a.early,   tone: "outline" },
+            ].map(s => (
+              <div key={s.l} style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 10px", border: "1px solid var(--hairline)", borderRadius: 8, background: "var(--paper)" }}>
+                <div className="num" style={{ fontWeight: 600, fontSize: 18, fontFamily: "var(--font-mono)" }}>{s.v}</div>
+                <div style={{ flex: 1, color: "var(--muted)", fontSize: 11.5, lineHeight: 1.2 }}>{s.l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Middle: per-site present + modality split */}
+        <div style={{ padding: "18px 22px", borderRight: "1px solid var(--hairline)" }}>
+          <div className="card-title" style={{ marginBottom: 8 }}>By site</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {a.bySite.map(s => {
+              const p = (s.present / s.roster) * 100;
+              return (
+                <div key={s.site} style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr 1fr auto", gap: 10, alignItems: "center", padding: "6px 0", borderBottom: "1px solid var(--hairline)" }}>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ fontSize: 13, fontWeight: 500 }}>{s.site}</div>
+                    <div style={{ color: "var(--muted)", fontSize: 11 }}>{s.channel}</div>
+                  </div>
+                  <div className="num" style={{ fontSize: 12.5 }}>
+                    <b>{s.present}</b><span style={{ color: "var(--muted)" }}> / {s.roster}</span>
+                  </div>
+                  <div className="row" style={{ gap: 6 }}>
+                    <div style={{ display: "flex", width: 80, height: 5, borderRadius: 4, overflow: "hidden", background: "var(--bg-deep)" }}>
+                      {s.modality.face > 0 && <div style={{ width: `${s.modality.face*100}%`, background: "var(--primary)" }} title={`Face ${(s.modality.face*100).toFixed(0)}%`} />}
+                      {s.modality.fp > 0   && <div style={{ width: `${s.modality.fp*100}%`,   background: "var(--positive)" }} title={`FP ${(s.modality.fp*100).toFixed(0)}%`} />}
+                      {s.modality.card > 0 && <div style={{ width: `${s.modality.card*100}%`, background: "var(--accent)" }} title={`Card ${(s.modality.card*100).toFixed(0)}%`} />}
+                    </div>
+                    <span className="num" style={{ fontSize: 11, color: "var(--muted)", fontFamily: "var(--font-mono)" }}>{p.toFixed(0)}%</span>
+                  </div>
+                  <div>
+                    {s.late > 5 ? <Pill tone="danger">{s.late}</Pill>
+                    : s.late >= 2 ? <Pill tone="warning">{s.late}</Pill>
+                    : <Pill tone="outline">{s.late}</Pill>}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 8, color: "var(--muted)", fontSize: 11 }}>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><span style={{ width: 8, height: 8, borderRadius: 2, background: "var(--primary)" }} /> Face</span>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><span style={{ width: 8, height: 8, borderRadius: 2, background: "var(--positive)" }} /> Fingerprint</span>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><span style={{ width: 8, height: 8, borderRadius: 2, background: "var(--accent)" }} /> Card</span>
+          </div>
+        </div>
+
+        {/* Right: hourly inflow + CTA */}
+        <div style={{ padding: "18px 22px", display: "flex", flexDirection: "column" }}>
+          <div className="card-title">Hourly inflow</div>
+          <div className="card-sub" style={{ marginBottom: 10 }}>00:00 → 23:00 · clock-in events</div>
+          <div style={{ display: "flex", alignItems: "flex-end", gap: 2, height: 64 }}>
+            {a.hourly.map((v, i) => (
+              <div key={i} title={`${String(i).padStart(2,"0")}:00 — ${v} in`} style={{
+                flex: 1,
+                height: `${Math.max(2, (v / max) * 64)}px`,
+                background: v === 0 ? "var(--bg-deep)" : "var(--primary)",
+                borderRadius: 2,
+                opacity: v === 0 ? 0.3 : 0.85,
+              }} />
+            ))}
+          </div>
+          <div style={{ display: "flex", justifyContent: "space-between", color: "var(--muted)", fontSize: 10.5, marginTop: 4, fontFamily: "var(--font-mono)" }}>
+            <span>00</span><span>06</span><span>12</span><span>18</span><span>23</span>
+          </div>
+
+          <div style={{ marginTop: "auto", paddingTop: 14, display: "flex", flexDirection: "column", gap: 8 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11.5, color: "var(--muted)" }}>
+              <Icon name="biometric" size={12} stroke={1.6} />
+              <span>6 connectors active · ZK · Hik · Dahua · Suprema · Selfie · Webhook</span>
+            </div>
+            <button className="btn primary" style={{ justifyContent: "center" }}>
+              <Icon name="clock" size={13} /> Open Time & Attendance
+            </button>
           </div>
         </div>
       </div>
