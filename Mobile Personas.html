@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Mobile Personas — Staff · Manager · HR</title>
+<meta name="viewport" content="width=1440, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Noto+Sans+Lao:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#F4EFE5;--paper:#FBF8F1;--ink:#14182A;--ink-2:#2A2F45;--muted:#6B6E7B;--muted-2:#8B8E99;
+    --hairline:#E5DECC;--bg-deep:#ECE4D2;
+    --staff:#C4843A;--staff-soft:#F4E7CE;
+    --mgr:#2E6F47;--mgr-soft:#DDEAD8;
+    --hr:#1A2A57;--hr-soft:#E5E8F2;
+    --positive:#2E6F47;--positive-soft:#DDEAD8;
+    --warning:#B5832B;--warning-soft:#F6E9C8;
+    --danger:#A8392E;--danger-soft:#F2D7CD;
+    --font-ui:"Instrument Sans",ui-sans-serif,system-ui,sans-serif;
+    --font-display:"Instrument Serif",serif;
+    --font-mono:"JetBrains Mono",ui-monospace,monospace;
+    --font-lao:"Noto Sans Lao","Instrument Sans",sans-serif;
+  }
+  *{box-sizing:border-box}html,body{margin:0;padding:0}
+  body{font-family:var(--font-ui);background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh}
+  .lao{font-family:var(--font-lao)}.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+  .stage{padding:36px 32px 80px;max-width:1480px;margin:0 auto}
+  .stage-h{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:28px;gap:24px}
+  .stage-h .eb{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .stage-h .t{font-family:var(--font-display);font-style:italic;font-size:42px;line-height:1.05;letter-spacing:-.012em;margin:6px 0 4px}
+  .stage-h .s{color:var(--muted);max-width:680px;font-size:13.5px}
+  .legend{display:flex;gap:14px;margin-top:6px;font-size:11.5px;color:var(--muted-2)}
+  .legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:middle}
+
+  .row{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;align-items:start}
+  .col{display:flex;flex-direction:column;align-items:center;gap:14px}
+  .col-h{display:flex;align-items:center;gap:10px;width:380px}
+  .col-h .badge{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-weight:700;font-family:var(--font-display);font-style:italic;font-size:18px}
+  .col-h.staff .badge{background:var(--staff-soft);color:var(--staff)}
+  .col-h.mgr .badge{background:var(--mgr-soft);color:var(--mgr)}
+  .col-h.hr .badge{background:var(--hr-soft);color:var(--hr)}
+  .col-h .nm{font-size:14px;font-weight:600;line-height:1.1}
+  .col-h .sb{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-top:2px}
+
+  /* Phone frame */
+  .phone{width:380px;height:780px;background:#0E1120;border-radius:50px;padding:13px;box-shadow:0 30px 60px -25px rgba(20,24,42,0.45),0 6px 20px -8px rgba(0,0,0,.2);position:relative;flex:0 0 380px}
+  .phone::before{content:"";position:absolute;top:24px;left:50%;transform:translateX(-50%);width:118px;height:32px;border-radius:18px;background:#0E1120;z-index:5}
+  .screen{width:100%;height:100%;background:#fff;border-radius:38px;overflow:hidden;position:relative;display:flex;flex-direction:column}
+  .status{height:50px;flex:0 0 50px;padding:18px 28px 0;display:flex;justify-content:space-between;align-items:flex-start;font-size:13.5px;font-weight:600;color:var(--ink);position:relative;z-index:6}
+  .status-r{display:inline-flex;align-items:center;gap:5px}
+  .status-r svg{vertical-align:middle}
+
+  /* Tabs (segmented inside phone) */
+  .tabs{position:absolute;left:14px;right:14px;bottom:14px;background:rgba(255,255,255,.97);backdrop-filter:blur(20px);border:1px solid var(--hairline);border-radius:18px;padding:6px;display:grid;grid-template-columns:repeat(4,1fr);gap:2px;z-index:8;box-shadow:0 18px 34px -16px rgba(20,24,42,.18)}
+  .tab{background:transparent;border:0;padding:9px 4px;border-radius:13px;font-family:inherit;font-size:10.5px;font-weight:600;color:var(--muted);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;letter-spacing:.02em}
+  .tab.on{background:var(--paper);color:var(--ink)}
+  .tab .ic{width:18px;height:18px}
+
+  /* Persona accent bar at top */
+  .persona-band{height:3px;width:100%;flex:0 0 3px}
+  .staff-mode .persona-band{background:var(--staff)}
+  .mgr-mode .persona-band{background:var(--mgr)}
+  .hr-mode .persona-band{background:var(--hr)}
+
+  /* Screen content (scrollable) */
+  .body{flex:1;overflow-y:auto;padding:14px 18px 110px;display:flex;flex-direction:column;gap:14px}
+  .body::-webkit-scrollbar{width:0}
+
+  /* Header inside */
+  .ph-h{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:2px}
+  .ph-greet{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .ph-h-t{font-family:var(--font-display);font-style:italic;font-size:24px;line-height:1.1;letter-spacing:-.01em;margin-top:2px}
+  .ph-h-r{display:flex;gap:6px;align-items:center}
+  .ic-pill{width:34px;height:34px;border-radius:50%;background:var(--paper);border:1px solid var(--hairline);display:grid;place-items:center;position:relative}
+  .ic-pill .dot{position:absolute;top:7px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--danger);border:1.5px solid #fff}
+  .ic-pill.av{background:var(--staff-soft);color:var(--staff);font-weight:600;font-size:12px;border:0}
+  .mgr-mode .ic-pill.av{background:var(--mgr-soft);color:var(--mgr)}
+  .hr-mode .ic-pill.av{background:var(--hr-soft);color:var(--hr)}
+
+  /* Hero card per persona */
+  .hero{border-radius:18px;padding:14px 16px;color:#fff;position:relative;overflow:hidden;flex:0 0 auto}
+  .staff-mode .hero{background:linear-gradient(160deg,#C4843A 0%,#8B5C24 100%)}
+  .mgr-mode .hero{background:linear-gradient(160deg,#2E6F47 0%,#1F4E33 100%)}
+  .hr-mode .hero{background:linear-gradient(160deg,#1A2A57 0%,#10193A 100%)}
+  .hero::after{content:"";position:absolute;top:-40px;right:-30px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.07)}
+  .hero .l{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;opacity:.7;font-weight:600}
+  .hero .t{font-family:var(--font-display);font-style:italic;font-size:30px;line-height:1.05;margin-top:4px}
+  .hero .s{font-size:11.5px;opacity:.78;margin-top:6px}
+  .hero-row{display:flex;gap:8px;margin-top:12px;position:relative;z-index:1}
+  .hero-stat{flex:1;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px 10px}
+  .hero-stat .ll{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.65;font-weight:600}
+  .hero-stat .vv{font-family:var(--font-display);font-style:italic;font-size:18px;line-height:1;margin-top:3px}
+  .hero-stat .uu{font-style:normal;font-family:var(--font-ui);font-size:11px;opacity:.7;margin-left:2px}
+
+  /* Section header */
+  .sec-h{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px}
+  .sec-t{font-size:12.5px;font-weight:600}
+  .sec-a{font-size:11px;color:var(--muted);font-weight:500}
+
+  /* Quick actions */
+  .qa{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .qa-i{background:var(--paper);border:1px solid var(--hairline);border-radius:13px;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer}
+  .qa-i .ic{width:30px;height:30px;border-radius:9px;display:grid;place-items:center}
+  .staff-mode .qa-i .ic{background:var(--staff-soft);color:var(--staff)}
+  .mgr-mode .qa-i .ic{background:var(--mgr-soft);color:var(--mgr)}
+  .hr-mode .qa-i .ic{background:var(--hr-soft);color:var(--hr)}
+  .qa-i .l{font-size:9.5px;font-weight:600;text-align:center;line-height:1.15;color:var(--ink-2)}
+
+  /* Cards */
+  .c{background:#fff;border:1px solid var(--hairline);border-radius:14px;padding:12px 14px}
+  .c-row{display:flex;align-items:center;gap:10px}
+  .c-row + .c-row{margin-top:10px;padding-top:10px;border-top:1px solid var(--hairline)}
+  .c-av{width:32px;height:32px;border-radius:50%;background:var(--paper);color:var(--ink-2);display:grid;place-items:center;font-weight:600;font-size:11.5px;flex:0 0 32px}
+  .mgr-mode .c-av{background:var(--mgr-soft);color:var(--mgr)}
+  .hr-mode .c-av{background:var(--hr-soft);color:var(--hr)}
+  .staff-mode .c-av{background:var(--staff-soft);color:var(--staff)}
+  .c-body{flex:1;min-width:0}
+  .c-nm{font-size:12.5px;font-weight:600;line-height:1.15}
+  .c-sub{font-size:10.5px;color:var(--muted);margin-top:2px}
+  .c-when{font-size:10px;color:var(--muted-2);font-weight:500;text-align:right;flex:0 0 auto}
+
+  /* Pills / chips */
+  .pill{display:inline-flex;align-items:center;gap:3px;padding:1px 7px;border-radius:999px;font-size:9.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase}
+  .pill.pos{background:var(--positive-soft);color:var(--positive)}
+  .pill.warn{background:var(--warning-soft);color:var(--warning)}
+  .pill.dang{background:var(--danger-soft);color:var(--danger)}
+  .pill.staff{background:var(--staff-soft);color:var(--staff)}
+  .pill.mgr{background:var(--mgr-soft);color:var(--mgr)}
+  .pill.hr{background:var(--hr-soft);color:var(--hr)}
+
+  /* Action buttons */
+  .b-row{display:flex;gap:6px;margin-top:10px}
+  .bt{flex:1;border:0;border-radius:10px;padding:8px;font-family:inherit;font-size:11.5px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:5px}
+  .bt.ok{background:var(--positive);color:#fff}
+  .bt.no{background:#fff;color:var(--danger);border:1px solid var(--danger-soft)}
+  .bt.gh{background:var(--paper);color:var(--ink-2);border:1px solid var(--hairline);flex:0 0 auto;padding:8px 12px}
+
+  /* Alert items */
+  .alert{display:flex;gap:10px;padding:10px;border-radius:12px;background:#fff;border:1px solid var(--hairline)}
+  .al-mk{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;flex:0 0 28px}
+  .al-mk.warn{background:var(--warning-soft);color:var(--warning)}
+  .al-mk.dang{background:var(--danger-soft);color:var(--danger)}
+  .al-mk.pos{background:var(--positive-soft);color:var(--positive)}
+  .al-mk.info{background:var(--hr-soft);color:var(--hr)}
+  .al-t{font-size:12px;font-weight:600;line-height:1.2}
+  .al-s{font-size:10.5px;color:var(--muted);margin-top:2px;line-height:1.3}
+
+  /* Metric mini */
+  .mt{flex:1;background:var(--paper);border:1px solid var(--hairline);border-radius:12px;padding:10px 12px}
+  .mt .l{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .mt .v{font-family:var(--font-display);font-style:italic;font-size:22px;line-height:1.05;margin-top:3px}
+  .mt .u{font-style:normal;font-family:var(--font-ui);font-size:10.5px;color:var(--muted);margin-left:2px}
+  .mt .s{font-size:10px;color:var(--muted);margin-top:2px}
+  .mt-row{display:flex;gap:8px}
+
+  /* Progress bar */
+  .pb{height:5px;border-radius:3px;background:var(--bg-deep);overflow:hidden;margin-top:8px}
+  .pb > div{height:100%}
+  .staff-mode .pb > div{background:var(--staff)}
+  .mgr-mode .pb > div{background:var(--mgr)}
+  .hr-mode .pb > div{background:var(--hr)}
+
+  /* Workflow trail */
+  .trail{display:flex;align-items:center;gap:4px;flex-wrap:wrap;font-size:10px;margin-top:8px;color:var(--muted)}
+  .trail .st{padding:2px 7px;border-radius:8px;background:var(--paper);border:1px solid var(--hairline)}
+  .trail .st.on{background:var(--positive-soft);border-color:transparent;color:var(--positive);font-weight:600}
+
+  /* Workspace pill button (for embed in workspace) */
+  .empty{font-size:11px;color:var(--muted-2);text-align:center;padding:14px}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel">
+const I=({n,s=16,c="currentColor",w=1.7})=>{const P={
+home:<><path d="M3 11l9-7 9 7M5 10v10h14V10"/></>,
+bell:<><path d="M6 9.5a6 6 0 0 1 12 0V14l1.5 2.5h-15L6 14V9.5z"/><path d="M9.5 19a2.5 2.5 0 0 0 5 0"/></>,
+inbox:<><path d="M4 13l3-9h10l3 9M4 13v6h16v-6M4 13h5l1 2h4l1-2h5"/></>,
+me:<><circle cx="12" cy="8" r="3.5"/><path d="M5 20c1-3.5 4-5 7-5s6 1.5 7 5"/></>,
+clock:<><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></>,
+plane:<><path d="M21 15l-9-3 1.5-3.5L21 5l-1 5L13 13M3 12l5 1 2 4-1.5 1L3 12z"/></>,
+doc:<><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/></>,
+wallet:<><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18M16 14h2"/></>,
+team:<><circle cx="9" cy="9" r="3.4"/><path d="M3 19c.8-3 3-4.5 6-4.5s5.2 1.5 6 4.5"/><circle cx="17" cy="8" r="2.6"/></>,
+chart:<><path d="M4 19h16M7 16V10M12 16V6M17 16v-4"/></>,
+chat:<><path d="M4 5h16v11H8l-4 4z"/></>,
+check:<><path d="M5 12l5 5L20 7"/></>,
+x:<><path d="M6 6l12 12M6 18L18 6"/></>,
+warn:<><path d="M12 4l9 16H3z"/><path d="M12 10v5M12 17.5v.5"/></>,
+shield:<><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></>,
+flag:<><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></>,
+spark:<><path d="M12 3v6M12 15v6M3 12h6M15 12h6"/></>,
+eye:<><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></>,
+plus:<><path d="M12 5v14M5 12h14"/></>,
+finger:<><path d="M9 20v-3M9 17a3 3 0 0 1-3-3v-3a6 6 0 1 1 12 0v6.5"/></>,
+};return <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth={w} strokeLinecap="round" strokeLinejoin="round">{P[n]}</svg>;};
+
+const StatusBar=()=><div className="status">
+  <span>9:41</span>
+  <span className="status-r">
+    <svg width="16" height="11" viewBox="0 0 16 11" fill="currentColor"><path d="M1 7h2v3H1zM5 5h2v5H5zM9 3h2v7H9zM13 1h2v9h-2z"/></svg>
+    <svg width="14" height="10" viewBox="0 0 14 10" fill="none" stroke="currentColor" strokeWidth="1.4"><path d="M1 4.5C2.5 3 4.5 2 7 2s4.5 1 6 2.5M3 6.5C4 5.7 5.4 5 7 5s3 .7 4 1.5M7 8.2v.1"/></svg>
+    <svg width="22" height="10" viewBox="0 0 22 10" fill="none" stroke="currentColor" strokeWidth="1"><rect x="0.5" y="0.5" width="18" height="9" rx="2"/><rect x="2" y="2" width="13" height="6" rx="1" fill="currentColor"/><rect x="19.5" y="3" width="1.5" height="4" rx="0.5" fill="currentColor"/></svg>
+  </span>
+</div>;
+
+const Tabs=({tab,setTab,items})=><div className="tabs">{items.map(t=><button key={t.id} className={"tab"+(tab===t.id?" on":"")} onClick={()=>setTab(t.id)}>
+  <I n={t.ic} s={18}/>{t.l}
+</button>)}</div>;
+
+/* ─── STAFF persona ─── */
+function StaffPhone(){
+  const [tab,setTab]=React.useState("home");
+  return <div className="phone"><div className="screen staff-mode">
+    <div className="persona-band"/>
+    <StatusBar/>
+    {tab==="home"&&<div className="body">
+      <div className="ph-h">
+        <div><div className="ph-greet">Tue · 22 Jul</div><div className="ph-h-t">Sabaidee, Souk</div></div>
+        <div className="ph-h-r"><div className="ic-pill"><I n="bell" s={16}/><i className="dot"/></div><div className="ic-pill av">SP</div></div>
+      </div>
+      <div className="hero">
+        <div className="l">Net pay · July (est.)</div>
+        <div className="t">₭ 6,820,400</div>
+        <div className="s">PIT 412k · NSSF 273k · payday Fri 25</div>
+        <div className="hero-row">
+          <div className="hero-stat"><div className="ll">Leave</div><div className="vv">11.5<span className="uu">d</span></div></div>
+          <div className="hero-stat"><div className="ll">Tenure</div><div className="vv">3.2<span className="uu">y</span></div></div>
+          <div className="hero-stat"><div className="ll">Perf H1</div><div className="vv">4.2<span className="uu">/5</span></div></div>
+        </div>
+      </div>
+      <div>
+        <div className="sec-h"><div className="sec-t">Quick actions</div></div>
+        <div className="qa">
+          <div className="qa-i"><div className="ic"><I n="finger" s={16}/></div><div className="l">Clock in/out</div></div>
+          <div className="qa-i"><div className="ic"><I n="plane" s={15}/></div><div className="l">Apply leave</div></div>
+          <div className="qa-i"><div className="ic"><I n="wallet" s={15}/></div><div className="l">Payslip</div></div>
+          <div className="qa-i"><div className="ic"><I n="doc" s={15}/></div><div className="l">Letter</div></div>
+        </div>
+      </div>
+      <div>
+        <div className="sec-h"><div className="sec-t">My alerts</div><span className="pill staff">3 new</span></div>
+        <div style={{display:"flex",flexDirection:"column",gap:8}}>
+          <div className="alert"><div className="al-mk pos"><I n="check" s={14}/></div><div style={{flex:1}}><div className="al-t">Leave LV-0902 approved</div><div className="al-s">Aug 14–16 · By Khamla C. · 22m ago</div></div></div>
+          <div className="alert"><div className="al-mk warn"><I n="doc" s={14}/></div><div style={{flex:1}}><div className="al-t">Contract renewal in 28 days</div><div className="al-s">HR will contact you · view draft</div></div></div>
+          <div className="alert"><div className="al-mk info"><I n="spark" s={14}/></div><div style={{flex:1}}><div className="al-t">GMP refresher due Fri</div><div className="al-s">15 min e-learning · status: not started</div></div></div>
+        </div>
+      </div>
+      <div>
+        <div className="sec-h"><div className="sec-t">My requests</div><span className="sec-a">2 pending</span></div>
+        <div className="c">
+          <div className="c-row"><div className="c-av">LV</div><div className="c-body"><div className="c-nm">Annual leave · 3d</div><div className="c-sub mono">LV-2025-0902 · Aug 14–16</div><div className="trail"><span className="st on">Submit</span>›<span className="st on">Mgr ✓</span>›<span className="st">Director</span>›<span className="st">HR</span></div></div></div>
+          <div className="c-row"><div className="c-av">EX</div><div className="c-body"><div className="c-nm">Travel claim · ₭ 1,240,000</div><div className="c-sub mono">EX-2025-0742 · Vientiane visit</div><div className="trail"><span className="st on">Submit</span>›<span className="st on">Mgr ✓</span>›<span className="st">Finance</span>›<span className="st">Pay</span></div></div></div>
+        </div>
+      </div>
+    </div>}
+    {tab==="alerts"&&<div className="body">
+      <div className="ph-h"><div><div className="ph-greet">Notifications</div><div className="ph-h-t">My alerts</div></div></div>
+      <div style={{display:"flex",flexDirection:"column",gap:8}}>
+        <div className="alert"><div className="al-mk pos"><I n="check" s={14}/></div><div style={{flex:1}}><div className="al-t">Leave LV-0902 approved by Khamla C.</div><div className="al-s">Aug 14–16 · 3 days · enjoy! · 22m</div></div></div>
+        <div className="alert"><div className="al-mk warn"><I n="doc" s={14}/></div><div style={{flex:1}}><div className="al-t">Contract renewal in 28 days</div><div className="al-s">HR will reach out by Aug 8 · 1h</div></div></div>
+        <div className="alert"><div className="al-mk info"><I n="wallet" s={14}/></div><div style={{flex:1}}><div className="al-t">July payslip ready Fri</div><div className="al-s">Net est. ₭ 6,820,400 · BCEL ****4421 · 3h</div></div></div>
+        <div className="alert"><div className="al-mk warn"><I n="spark" s={14}/></div><div style={{flex:1}}><div className="al-t">GMP refresher due Fri 25</div><div className="al-s">15 min e-learning · 6h</div></div></div>
+        <div className="alert"><div className="al-mk pos"><I n="shield" s={14}/></div><div style={{flex:1}}><div className="al-t">Bottling A — Safety Champion Q2</div><div className="al-s">Recognition certificate available · yesterday</div></div></div>
+        <div className="alert"><div className="al-mk info"><I n="chat" s={14}/></div><div style={{flex:1}}><div className="al-t">HR helpdesk replied · ticket #2204</div><div className="al-s">"Tax cert ready for pickup at HR" · 2d</div></div></div>
+      </div>
+    </div>}
+    {tab==="approvals"&&<div className="body">
+      <div className="ph-h"><div><div className="ph-greet">My requests</div><div className="ph-h-t">Approvals</div></div><div className="ic-pill"><I n="plus" s={16}/></div></div>
+      <div className="c">
+        <div className="c-row"><div className="c-av">LV</div><div className="c-body"><div className="c-nm">Annual leave</div><div className="c-sub">Aug 14–16 · 3 days · cover by Bounmy</div></div><span className="pill warn">Mgr</span></div>
+        <div className="trail" style={{paddingLeft:42,marginTop:-2}}><span className="st on">Submit</span>›<span className="st on">Mgr</span>›<span className="st">Director</span>›<span className="st">HR</span></div>
+      </div>
+      <div className="c">
+        <div className="c-row"><div className="c-av">EX</div><div className="c-body"><div className="c-nm">Travel claim ₭ 1,240,000</div><div className="c-sub">3 receipts · auto-OCR matched · Vientiane</div></div><span className="pill warn">Fin</span></div>
+        <div className="trail" style={{paddingLeft:42,marginTop:-2}}><span className="st on">Submit</span>›<span className="st on">Mgr ✓</span>›<span className="st on">Finance</span>›<span className="st">Pay</span></div>
+      </div>
+      <div className="c">
+        <div className="c-row"><div className="c-av">SW</div><div className="c-body"><div className="c-nm">Shift swap · Sat → Sun</div><div className="c-sub">w/ Vilakhone L. · both confirmed</div></div><span className="pill pos">OK</span></div>
+        <div className="trail" style={{paddingLeft:42,marginTop:-2}}><span className="st on">Submit</span>›<span className="st on">Peer ✓</span>›<span className="st on">Mgr ✓</span>›<span className="st on">Posted</span></div>
+      </div>
+      <div className="c">
+        <div className="c-row"><div className="c-av">DC</div><div className="c-body"><div className="c-nm">Salary certificate</div><div className="c-sub">For housing loan · BCEL bank · 5d SLA</div></div><span className="pill warn">HR</span></div>
+      </div>
+    </div>}
+    {tab==="me"&&<div className="body">
+      <div className="ph-h"><div><div className="ph-greet">My profile</div><div className="ph-h-t">Souksavanh P.</div></div></div>
+      <div className="c">
+        <div className="c-row"><div className="c-av" style={{width:48,height:48,fontSize:15,flexBasis:48}}>SP</div><div className="c-body"><div className="c-nm">Souksavanh Phommachanh</div><div className="c-sub lao">ສຸກສະຫວັນ ພົມມະຈັນ</div><div className="c-sub" style={{marginTop:4}}>Sr Supervisor · Bottling A · Savannakhet</div></div></div>
+      </div>
+      <div className="mt-row">
+        <div className="mt"><div className="l">Net pay (Jul)</div><div className="v">₭ 6.82<span className="u">M</span></div><div className="s">+1.4% vs Jun</div></div>
+        <div className="mt"><div className="l">Leave bal.</div><div className="v">11.5<span className="u">d</span></div><div className="s">/ 18 entitled</div></div>
+      </div>
+      <div className="mt-row">
+        <div className="mt"><div className="l">Attendance</div><div className="v">96<span className="u">%</span></div><div className="pb"><div style={{width:"96%"}}/></div></div>
+        <div className="mt"><div className="l">Performance</div><div className="v">4.5<span className="u">/5</span></div><div className="s">H1 · Top 10%</div></div>
+      </div>
+      <div className="c">
+        <div className="sec-h"><div className="sec-t">Statutory · YTD</div></div>
+        <div style={{display:"flex",justifyContent:"space-between",fontSize:11.5,color:"var(--muted)",padding:"4px 0"}}><span>PIT withheld</span><span className="mono" style={{color:"var(--ink)",fontWeight:600}}>₭ 2,884,200</span></div>
+        <div style={{display:"flex",justifyContent:"space-between",fontSize:11.5,color:"var(--muted)",padding:"4px 0",borderTop:"1px solid var(--hairline)"}}><span>NSSF (5.5%)</span><span className="mono" style={{color:"var(--ink)",fontWeight:600}}>₭ 1,911,000</span></div>
+        <div style={{display:"flex",justifyContent:"space-between",fontSize:11.5,color:"var(--muted)",padding:"4px 0",borderTop:"1px solid var(--hairline)"}}><span>Provident Fund</span><span className="mono" style={{color:"var(--ink)",fontWeight:600}}>₭ 1,041,000</span></div>
+      </div>
+      <div className="c">
+        <div className="c-row"><div className="c-av"><I n="doc" s={14}/></div><div className="c-body"><div className="c-nm">Documents vault</div><div className="c-sub">12 files · ID, contract, letters</div></div></div>
+        <div className="c-row"><div className="c-av"><I n="shield" s={14}/></div><div className="c-body"><div className="c-nm">Privacy & data</div><div className="c-sub">Manage what HR can see</div></div></div>
+      </div>
+    </div>}
+    <Tabs tab={tab} setTab={setTab} items={[
+      {id:"home",l:"Home",ic:"home"},{id:"alerts",l:"Alerts",ic:"bell"},{id:"approvals",l:"Requests",ic:"inbox"},{id:"me",l:"Me",ic:"me"}]}/>
+  </div></div>;
+}
+
+/* ─── MANAGER persona ─── */
+function ManagerPhone(){
+  const [tab,setTab]=React.useState("approvals");
+  return <div className="phone"><div className="screen mgr-mode">
+    <div className="persona-band"/>
+    <StatusBar/>
+    {tab==="home"&&<div className="body">
+      <div className="ph-h"><div><div className="ph-greet">Tue · 22 Jul</div><div className="ph-h-t">Khamla — your team</div></div><div className="ph-h-r"><div className="ic-pill"><I n="bell" s={16}/><i className="dot"/></div><div className="ic-pill av">KC</div></div></div>
+      <div className="hero">
+        <div className="l">Today on Bottling A</div>
+        <div className="t">12 / 14 on shift</div>
+        <div className="s">2 on leave · 1 late · OEE 87.4%</div>
+        <div className="hero-row">
+          <div className="hero-stat"><div className="ll">Pending</div><div className="vv">6</div></div>
+          <div className="hero-stat"><div className="ll">Att.</div><div className="vv">85.7<span className="uu">%</span></div></div>
+          <div className="hero-stat"><div className="ll">Perf</div><div className="vv">4.1<span className="uu">/5</span></div></div>
+        </div>
+      </div>
+      <div>
+        <div className="sec-h"><div className="sec-t">Team alerts</div><span className="pill mgr">3</span></div>
+        <div style={{display:"flex",flexDirection:"column",gap:8}}>
+          <div className="alert"><div className="al-mk dang"><I n="warn" s={14}/></div><div style={{flex:1}}><div className="al-t">Phetdara OT blocks payroll cut-off</div><div className="al-s">Approve before 17:00 · LV-0901</div></div></div>
+          <div className="alert"><div className="al-mk warn"><I n="clock" s={14}/></div><div style={{flex:1}}><div className="al-t">Manysone late (08:12) · 3rd this month</div><div className="al-s">1-on-1 suggested · open coaching plan</div></div></div>
+          <div className="alert"><div className="al-mk pos"><I n="shield" s={14}/></div><div style={{flex:1}}><div className="al-t">Q2 Safety Champion: your team</div><div className="al-s">Recognition email scheduled Fri</div></div></div>
+        </div>
+      </div>
+      <div>
+        <div className="sec-h"><div className="sec-t">Team metrics</div><span className="sec-a">H1 2025</span></div>
+        <div className="mt-row">
+          <div className="mt"><div className="l">Attendance</div><div className="v">96<span className="u">%</span></div><div className="pb"><div style={{width:"96%"}}/></div></div>
+          <div className="mt"><div className="l">Training</div><div className="v">79<span className="u">%</span></div><div className="pb"><div style={{width:"79%"}}/></div></div>
+        </div>
+        <div className="mt-row" style={{marginTop:8}}>
+          <div className="mt"><div className="l">Leave avg</div><div className="v">11.2<span className="u">d</span></div><div className="s">3 cap-out risk</div></div>
+          <div className="mt"><div className="l">Safety days</div><div className="v">182</div><div className="s">incident-free</div></div>
+        </div>
+      </div>
+    </div>}
+    {tab==="alerts"&&<div className="body">
+      <div className="ph-h"><div><div className="ph-greet">Notifications</div><div className="ph-h-t">Team alerts</div></div></div>
+      <div style={{display:"flex",flexDirection:"column",gap:8}}>
+        <div className="alert"><div className="al-mk dang"><I n="flag" s={14}/></div><div style={{flex:1}}><div className="al-t">SLA at risk · Phetdara OT</div><div className="al-s">Decision needed before 17:00 today · 8m</div></div></div>
+        <div className="alert"><div className="al-mk warn"><I n="clock" s={14}/></div><div style={{flex:1}}><div className="al-t">Manysone late 3rd time</div><div className="al-s">Auto-trigger: schedule 1-on-1 · 24m</div></div></div>
+        <div className="alert"><div className="al-mk warn"><I n="warn" s={14}/></div><div style={{flex:1}}><div className="al-t">Coverage gap · Sat shift 2</div><div className="al-s">2 staff on leave · 1 short · 1h</div></div></div>
+        <div className="alert"><div className="al-mk info"><I n="doc" s={14}/></div><div style={{flex:1}}><div className="al-t">3 contracts renewing in 30d</div><div className="al-s">HR drafted · awaiting your sign-off · 2h</div></div></div>
+        <div className="alert"><div className="al-mk pos"><I n="shield" s={14}/></div><div style={{flex:1}}><div className="al-t">Safety Champion Q2 · Bottling A</div><div className="al-s">Email scheduled Fri 09:00 · yesterday</div></div></div>
+        <div className="alert"><div className="al-mk info"><I n="chart" s={14}/></div><div style={{flex:1}}><div className="al-t">H1 review window opens Aug 1</div><div className="al-s">14 reviews to complete · 2d</div></div></div>
+      </div>
+    </div>}
+    {tab==="approvals"&&<div className="body">
+      <div className="ph-h"><div><div className="ph-greet">Inbox · 6</div><div className="ph-h-t">Approvals</div></div><div className="ic-pill"><I n="check" s={16}/></div></div>
+      <div className="c">
+        <div className="c-row"><div className="c-av">PT</div><div className="c-body"><div className="c-nm">Phetdara T. · Overtime</div><div className="c-sub">Aug 09 · 4h evening · ₭ 320k <span className="pill dang" style={{marginLeft:4}}>HIGH</span></div></div><div className="c-when">Due 17:00</div></div>
+        <div className="c-sub" style={{marginTop:6}}>"Line A maintenance carry-over"</div>
+        <div className="b-row"><button className="bt ok"><I n="check" s={13}/>Approve</button><button className="bt no">Reject</button><button className="bt gh"><I n="eye" s={13}/></button></div>
+      </div>
+      <div className="c">
+        <div className="c-row"><div className="c-av">SP</div><div className="c-body"><div className="c-nm">Souksavanh P. · Annual leave</div><div className="c-sub">Aug 14–16 · 3 days · cover Bounmy V.</div></div><div className="c-when">Due 1d</div></div>
+        <div className="b-row"><button className="bt ok"><I n="check" s={13}/>Approve</button><button className="bt no">Reject</button><button className="bt gh"><I n="eye" s={13}/></button></div>
+      </div>
+      <div className="c">
+        <div className="c-row"><div className="c-av">SH</div><div className="c-body"><div className="c-nm">Sengthong H. · Travel ₭1.24M</div><div className="c-sub">3 receipts · OCR 100% match</div></div><div className="c-when">2d</div></div>
+        <div className="b-row"><button className="bt ok"><I n="check" s={13}/>Approve</button><button className="bt no">Reject</button><button className="bt gh"><I n="eye" s={13}/></button></div>
+      </div>
+      <div className="c">
+        <div className="c-row"><div className="c-av">AS</div><div className="c-body"><div className="c-nm">Aphone S. · Shift swap</div><div className="c-sub">Sat → Sun · w/ Vilakhone</div></div><div className="c-when">3d</div></div>
+        <div className="b-row"><button className="bt ok"><I n="check" s={13}/>Approve</button><button className="bt gh">Defer</button></div>
+      </div>
+      <div className="c">
+        <div className="c-row"><div className="c-av">BV</div><div className="c-body"><div className="c-nm">Bounmy V. · Sick leave</div><div className="c-sub">Aug 04 · MC attached <span className="pill pos" style={{marginLeft:4}}>AUTO</span></div></div><div className="c-when">—</div></div>
+      </div>
+    </div>}
+    {tab==="team"&&<div className="body">
+      <div className="ph-h"><div><div className="ph-greet">14 staff</div><div className="ph-h-t">My team</div></div></div>
+      <div className="mt-row">
+        <div className="mt"><div className="l">On shift</div><div className="v">12<span className="u">/14</span></div><div className="s">2 on leave</div></div>
+        <div className="mt"><div className="l">Late today</div><div className="v">1</div><div className="s">Manysone P.</div></div>
+      </div>
+      <div className="c">
+        <div className="c-row"><div className="c-av">SP</div><div className="c-body"><div className="c-nm">Souksavanh P.</div><div className="c-sub">Sr Supervisor · 4.5/5</div></div><span className="pill pos">Shift</span></div>
+        <div className="c-row"><div className="c-av">BV</div><div className="c-body"><div className="c-nm">Bounmy V.</div><div className="c-sub">Sr Operator · 4.3/5</div></div><span className="pill pos">Shift</span></div>
+        <div className="c-row"><div className="c-av">PT</div><div className="c-body"><div className="c-nm">Phetdara T.</div><div className="c-sub">Operator · 4.1/5</div></div><span className="pill pos">Shift</span></div>
+        <div className="c-row"><div className="c-av">SH</div><div className="c-body"><div className="c-nm">Sengthong H.</div><div className="c-sub">Operator · 3.9/5</div></div><span className="pill warn">Leave</span></div>
+        <div className="c-row"><div className="c-av">VL</div><div className="c-body"><div className="c-nm">Vilakhone L.</div><div className="c-sub">Jr Operator · 3.7/5</div></div><span className="pill warn">Leave</span></div>
+        <div className="c-row"><div className="c-av">MP</div><div className="c-body"><div className="c-nm">Manysone P.</div><div className="c-sub">Operator · in 08:12</div></div><span className="pill dang">Late</span></div>
+        <div className="c-row"><div className="c-av">PS</div><div className="c-body"><div className="c-nm">Phimphone S.</div><div className="c-sub">Quality · 4.0/5</div></div><span className="pill pos">Shift</span></div>
+      </div>
+    </div>}
+    <Tabs tab={tab} setTab={setTab} items={[
+      {id:"home",l:"Home",ic:"home"},{id:"approvals",l:"Approvals",ic:"inbox"},{id:"team",l:"Team",ic:"team"},{id:"alerts",l:"Alerts",ic:"bell"}]}/>
+  </div></div>;
+}
+
+/* ─── HR persona ─── */
+function HRPhone(){
+  const [tab,setTab]=React.useState("home");
+  return <div className="phone"><div className="screen hr-mode">
+    <div className="persona-band"/>
+    <StatusBar/>
+    {tab==="home"&&<div className="body">
+      <div className="ph-h"><div><div className="ph-greet">Tue · 22 Jul · payroll D-3</div><div className="ph-h-t">Sirisak — HR ops</div></div><div className="ph-h-r"><div className="ic-pill"><I n="bell" s={16}/><i className="dot"/></div><div className="ic-pill av">SK</div></div></div>
+      <div className="hero">
+        <div className="l">Org pulse · today</div>
+        <div className="t">412 / 437</div>
+        <div className="s">on shift · 18 leave · 7 absent · attrition 6.8%</div>
+        <div className="hero-row">
+          <div className="hero-stat"><div className="ll">Approvals</div><div className="vv">23</div></div>
+          <div className="hero-stat"><div className="ll">Tickets</div><div className="vv">11</div></div>
+          <div className="hero-stat"><div className="ll">Compliance</div><div className="vv">94<span className="uu">%</span></div></div>
+        </div>
+      </div>
+      <div>
+        <div className="sec-h"><div className="sec-t">Critical alerts</div><span className="pill dang">Action</span></div>
+        <div style={{display:"flex",flexDirection:"column",gap:8}}>
+          <div className="alert"><div className="al-mk dang"><I n="warn" s={14}/></div><div style={{flex:1}}><div className="al-t">Payroll cut-off Fri 17:00</div><div className="al-s">3 OT items, 2 claims pending mgr · escalate?</div></div></div>
+          <div className="alert"><div className="al-mk warn"><I n="doc" s={14}/></div><div style={{flex:1}}><div className="al-t">12 contracts renewing in 30d</div><div className="al-s">Bottling A:3 · QA:2 · Logistics:7</div></div></div>
+          <div className="alert"><div className="al-mk warn"><I n="shield" s={14}/></div><div style={{flex:1}}><div className="al-t">2 visa renewals due Aug</div><div className="al-s">Thai expat — Pongsak T. · Sripatum S.</div></div></div>
+          <div className="alert"><div className="al-mk info"><I n="chart" s={14}/></div><div style={{flex:1}}><div className="al-t">NSSF filing window opens Aug 1</div><div className="al-s">e-NSSF batch ready · review &amp; submit</div></div></div>
+        </div>
+      </div>
+      <div>
+        <div className="sec-h"><div className="sec-t">Quick actions</div></div>
+        <div className="qa">
+          <div className="qa-i"><div className="ic"><I n="inbox" s={15}/></div><div className="l">Approvals</div></div>
+          <div className="qa-i"><div className="ic"><I n="wallet" s={15}/></div><div className="l">Payroll run</div></div>
+          <div className="qa-i"><div className="ic"><I n="chat" s={15}/></div><div className="l">Helpdesk</div></div>
+          <div className="qa-i"><div className="ic"><I n="chart" s={15}/></div><div className="l">Analytics</div></div>
+        </div>
+      </div>
+    </div>}
+    {tab==="alerts"&&<div className="body">
+      <div className="ph-h"><div><div className="ph-greet">All systems</div><div className="ph-h-t">HR alerts</div></div></div>
+      <div style={{display:"flex",flexDirection:"column",gap:8}}>
+        <div className="alert"><div className="al-mk dang"><I n="warn" s={14}/></div><div style={{flex:1}}><div className="al-t">Payroll cut-off Fri 17:00</div><div className="al-s">5 items pending across 3 mgrs · 12m</div></div></div>
+        <div className="alert"><div className="al-mk dang"><I n="flag" s={14}/></div><div style={{flex:1}}><div className="al-t">Anomaly · OT spike +24% Logistics</div><div className="al-s">vs trailing 6 weeks · review · 38m</div></div></div>
+        <div className="alert"><div className="al-mk warn"><I n="doc" s={14}/></div><div style={{flex:1}}><div className="al-t">12 contracts due 30d</div><div className="al-s">Auto-draft prepared in CMS · 1h</div></div></div>
+        <div className="alert"><div className="al-mk warn"><I n="shield" s={14}/></div><div style={{flex:1}}><div className="al-t">2 expat visa renewals · Aug</div><div className="al-s">Pongsak T. (15d), Sripatum S. (22d) · 2h</div></div></div>
+        <div className="alert"><div className="al-mk info"><I n="chart" s={14}/></div><div style={{flex:1}}><div className="al-t">NSSF e-filing opens Aug 1</div><div className="al-s">437 staff · ₭ 152.4M · 4h</div></div></div>
+        <div className="alert"><div className="al-mk info"><I n="team" s={14}/></div><div style={{flex:1}}><div className="al-t">3 onboarding · Aug 4</div><div className="al-s">Day-1 kits ready · email scheduled · 6h</div></div></div>
+        <div className="alert"><div className="al-mk pos"><I n="check" s={14}/></div><div style={{flex:1}}><div className="al-t">e-PIT batch reconciled</div><div className="al-s">100% match — exit on time · yesterday</div></div></div>
+      </div>
+    </div>}
+    {tab==="approvals"&&<div className="body">
+      <div className="ph-h"><div><div className="ph-greet">23 awaiting</div><div className="ph-h-t">HR queue</div></div><div className="ic-pill"><I n="check" s={16}/></div></div>
+      <div className="mt-row">
+        <div className="mt"><div className="l">Mgr-pending</div><div className="v">14</div><div className="s">Avg 8h SLA</div></div>
+        <div className="mt"><div className="l">HR-pending</div><div className="v">9</div><div className="s">letters &amp; finance</div></div>
+      </div>
+      <div className="c">
+        <div className="c-row"><div className="c-av">VL</div><div className="c-body"><div className="c-nm">Vilakhone L. · Salary cert</div><div className="c-sub">Housing loan · BCEL · LT-0701</div></div><div className="c-when">5d</div></div>
+        <div className="b-row"><button className="bt ok"><I n="check" s={13}/>Issue</button><button className="bt gh">Draft</button></div>
+      </div>
+      <div className="c">
+        <div className="c-row"><div className="c-av">PR</div><div className="c-body"><div className="c-nm">Payroll run · July</div><div className="c-sub">437 staff · ₭ 2.84B · BCEL/LDB/JDB batch</div></div><div className="c-when">D-3</div></div>
+        <div className="b-row"><button className="bt ok"><I n="check" s={13}/>Approve run</button><button className="bt gh"><I n="eye" s={13}/></button></div>
+      </div>
+      <div className="c">
+        <div className="c-row"><div className="c-av">CT</div><div className="c-body"><div className="c-nm">Contract renewal · S. Phommachanh</div><div className="c-sub">3-yr · Bottling A · auto-drafted</div></div><div className="c-when">28d</div></div>
+        <div className="b-row"><button className="bt ok"><I n="check" s={13}/>Send</button><button className="bt gh">Edit</button></div>
+      </div>
+      <div className="c">
+        <div className="c-row"><div className="c-av">EX</div><div className="c-body"><div className="c-nm">Travel claim · Sengthong H.</div><div className="c-sub">₭1,240,000 · Mgr ✓ · Finance review</div></div><div className="c-when">2d</div></div>
+        <div className="b-row"><button className="bt ok"><I n="check" s={13}/>Post</button><button className="bt no">Hold</button></div>
+      </div>
+      <div className="c">
+        <div className="c-row"><div className="c-av">VS</div><div className="c-body"><div className="c-nm">Visa renewal · Pongsak T.</div><div className="c-sub">Thai · expires Aug 7 · DoFA pack ready</div></div><div className="c-when">15d</div></div>
+        <div className="b-row"><button className="bt ok"><I n="check" s={13}/>File</button><button className="bt gh"><I n="eye" s={13}/></button></div>
+      </div>
+    </div>}
+    {tab==="me"&&<div className="body">
+      <div className="ph-h"><div><div className="ph-greet">My profile</div><div className="ph-h-t">Sirisak K.</div></div></div>
+      <div className="c">
+        <div className="c-row"><div className="c-av" style={{width:48,height:48,fontSize:15,flexBasis:48}}>SK</div><div className="c-body"><div className="c-nm">Sirisak Khamvongsa</div><div className="c-sub lao">ສິລິສັກ ຄຳວົງສາ</div><div className="c-sub" style={{marginTop:4}}>HR Operations Manager · HQ Vientiane</div></div></div>
+      </div>
+      <div className="mt-row">
+        <div className="mt"><div className="l">Org headcount</div><div className="v">437</div><div className="s">+12 YTD · 6.8% attr</div></div>
+        <div className="mt"><div className="l">SLA score</div><div className="v">94<span className="u">%</span></div><div className="pb"><div style={{width:"94%"}}/></div></div>
+      </div>
+      <div className="mt-row">
+        <div className="mt"><div className="l">Cases closed</div><div className="v">128</div><div className="s">this month · 4.7★</div></div>
+        <div className="mt"><div className="l">Comp. rate</div><div className="v">94<span className="u">%</span></div><div className="s">trainings + docs</div></div>
+      </div>
+      <div className="c">
+        <div className="sec-h"><div className="sec-t">My delegations</div></div>
+        <div className="c-row"><div className="c-av">PR</div><div className="c-body"><div className="c-nm">Payroll · sign-off</div><div className="c-sub">Backup: Phonepaseuth (Jul 25–28)</div></div></div>
+        <div className="c-row"><div className="c-av">CT</div><div className="c-body"><div className="c-nm">Contracts · approve</div><div className="c-sub">Up to 3-yr · &lt; ₭ 15M/m</div></div></div>
+      </div>
+      <div className="c">
+        <div className="c-row"><div className="c-av"><I n="shield" s={14}/></div><div className="c-body"><div className="c-nm">PII access policy</div><div className="c-sub">Reviewed Jul 14 · auto-renew Q4</div></div></div>
+        <div className="c-row"><div className="c-av"><I n="doc" s={14}/></div><div className="c-body"><div className="c-nm">Audit trail</div><div className="c-sub">All HR actions · 90d retention</div></div></div>
+      </div>
+    </div>}
+    <Tabs tab={tab} setTab={setTab} items={[
+      {id:"home",l:"Home",ic:"home"},{id:"approvals",l:"Queue",ic:"inbox"},{id:"alerts",l:"Alerts",ic:"bell"},{id:"me",l:"Me",ic:"me"}]}/>
+  </div></div>;
+}
+
+function App(){
+  return <div className="stage">
+    <div className="stage-h">
+      <div>
+        <div className="eb">v1.0 · Mobile</div>
+        <h1 className="t">One app · three perspectives</h1>
+        <div className="s">Tap the tabs inside each phone to explore Home, Alerts, Approvals and personal metrics tailored per role. Same design language, role-aware colour and information density.</div>
+      </div>
+      <div className="legend">
+        <span><i style={{background:"#C4843A"}}/>Staff · ESS</span>
+        <span><i style={{background:"#2E6F47"}}/>Manager · Team</span>
+        <span><i style={{background:"#1A2A57"}}/>HR · Admin</span>
+      </div>
+    </div>
+    <div className="row">
+      <div className="col">
+        <div className="col-h staff"><div className="badge">S</div><div><div className="nm">Souksavanh P.</div><div className="sb">Staff · ESS</div></div></div>
+        <StaffPhone/>
+      </div>
+      <div className="col">
+        <div className="col-h mgr"><div className="badge">M</div><div><div className="nm">Khamla C.</div><div className="sb">Team Manager</div></div></div>
+        <ManagerPhone/>
+      </div>
+      <div className="col">
+        <div className="col-h hr"><div className="badge">H</div><div><div className="nm">Sirisak K.</div><div className="sb">HR Admin</div></div></div>
+        <HRPhone/>
+      </div>
+    </div>
+  </div>;
+}
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body></html>

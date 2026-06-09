@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>v1.0 Workspace — Staff · Manager · HR</title>
+<meta name="viewport" content="width=1440, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Noto+Sans+Lao:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:#F4EFE5; --bg-deep:#ECE4D2; --paper:#FBF8F1;
+    --ink:#14182A; --ink-2:#2A2F45; --muted:#6B6E7B;
+    --hairline:#E5DECC; --primary:#1A2A57;
+    --accent:#C4843A; --accent-soft:#F4E7CE;
+    --mgr:#2E6F47; --hr:#C4D2EE;
+    --font-ui:"Instrument Sans",ui-sans-serif,system-ui,sans-serif;
+    --font-display:"Instrument Serif",serif;
+    --font-lao:"Noto Sans Lao","Instrument Sans",sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%;background:var(--bg);font-family:var(--font-ui);color:var(--ink)}
+  .ws{position:fixed;inset:0;display:flex;flex-direction:column}
+  .ws-bar{height:56px;background:#14182A;color:#fff;display:flex;align-items:center;gap:16px;padding:0 18px;border-bottom:1px solid rgba(255,255,255,.06);z-index:5}
+  .ws-brand{display:flex;align-items:center;gap:10px}
+  .ws-mark{width:30px;height:30px;border-radius:8px;background:var(--accent);color:#14182A;display:grid;place-items:center;font-family:var(--font-display);font-style:italic;font-size:18px;font-weight:600}
+  .ws-title{display:flex;flex-direction:column;line-height:1.1}
+  .ws-title-t{font-family:var(--font-display);font-style:italic;font-size:18px;letter-spacing:-.005em;white-space:nowrap}
+  .ws-title-s{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.55);font-weight:500;white-space:nowrap}
+
+  .ws-toggle{margin-left:auto;display:inline-flex;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:999px;padding:4px;gap:2px}
+  .ws-toggle button{background:transparent;border:0;cursor:pointer;color:rgba(255,255,255,.7);font-family:inherit;font-size:13px;font-weight:600;padding:7px 16px;border-radius:999px;display:inline-flex;align-items:center;gap:8px;letter-spacing:.01em;transition:all .15s ease;white-space:nowrap}
+  .ws-toggle button:hover{color:#fff}
+  .ws-toggle button.on[data-view="staff"]{background:var(--accent);color:#14182A;box-shadow:0 1px 0 rgba(0,0,0,.08)}
+  .ws-toggle button.on[data-view="manager"]{background:var(--mgr);color:#fff;box-shadow:0 1px 0 rgba(0,0,0,.08)}
+  .ws-toggle button.on[data-view="hr"]{background:var(--hr);color:#14182A;box-shadow:0 1px 0 rgba(0,0,0,.08)}
+  .ws-toggle button .dot{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.6}
+  .ws-toggle button.on .dot{opacity:1}
+  .ws-toggle button .tag{font-size:10px;letter-spacing:.1em;text-transform:uppercase;opacity:.6;font-weight:600}
+  .ws-toggle button.on .tag{opacity:.65}
+
+  .ws-tools{display:flex;align-items:center;gap:10px}
+  .ws-tool{background:transparent;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.85);border-radius:999px;padding:6px 12px;cursor:pointer;font-family:inherit;font-size:12px;font-weight:500;display:inline-flex;align-items:center;gap:6px}
+  .ws-tool:hover{background:rgba(255,255,255,.06);color:#fff}
+  .ws-tool.on{background:rgba(196,132,58,.15);border-color:rgba(196,132,58,.4);color:var(--accent)}
+
+  .ws-frame-wrap{flex:1;position:relative;background:var(--bg);overflow:hidden}
+  .ws-frame{position:absolute;inset:0;width:100%;height:100%;border:0;background:var(--bg);transition:opacity .25s ease}
+  .ws-frame.hide{opacity:0;pointer-events:none}
+
+  .ws-flash{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);background:#14182A;color:#fff;border-radius:999px;padding:8px 16px;font-size:12px;font-weight:500;box-shadow:0 12px 28px -10px rgba(0,0,0,.4);display:flex;align-items:center;gap:8px;pointer-events:none;opacity:0;transition:opacity .2s ease;z-index:4}
+  .ws-flash.on{opacity:1}
+  .ws-flash .accent{color:var(--accent);font-weight:700}
+
+  /* Mobile preview overlay — full bleed for 3-persona view */
+  .ws-side{position:absolute;top:12px;right:16px;left:16px;height:calc(100% - 24px);background:#FBF8F1;border:1px solid var(--hairline);border-radius:18px;box-shadow:0 24px 60px -20px rgba(20,24,42,.3);overflow:hidden;display:none;z-index:3}
+  .ws-side.show{display:block}
+  .ws-side-h{padding:10px 14px;border-bottom:1px solid var(--hairline);display:flex;align-items:center;gap:10px;font-size:12px;background:var(--paper)}
+  .ws-side-h .lbl{font-weight:600}
+  .ws-side-h .lo{font-family:var(--font-lao);color:var(--muted)}
+  .ws-side-h .x{margin-left:auto;cursor:pointer;background:transparent;border:0;color:var(--muted);font-size:14px;padding:4px 8px}
+  .ws-side iframe{width:100%;height:calc(100% - 42px);border:0;display:block;background:var(--bg)}
+
+  .ws-side-tab{position:absolute;right:16px;bottom:22px;background:#14182A;color:#fff;border:0;border-radius:999px;padding:9px 16px;font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;box-shadow:0 14px 30px -10px rgba(0,0,0,.4);display:inline-flex;align-items:center;gap:8px;z-index:3}
+  .ws-side-tab:hover{background:var(--primary)}
+  .ws-side-tab.hidden{display:none}
+  .ws-side-tab .ico{background:var(--accent);color:#14182A;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px}
+</style>
+</head>
+<body>
+  <div class="ws">
+    <div class="ws-bar">
+      <div class="ws-brand">
+        <div class="ws-mark">L</div>
+        <div class="ws-title">
+          <span class="ws-title-t">Lao Beverage Workspace</span>
+          <span class="ws-title-s">v1.0 · HRMS Suite</span>
+        </div>
+      </div>
+
+      <div class="ws-toggle" role="tablist" aria-label="View">
+        <button id="btn-staff" class="on" data-view="staff" role="tab" aria-selected="true">
+          <span class="dot"></span><span>Staff View</span><span class="tag">ESS</span>
+        </button>
+        <button id="btn-manager" data-view="manager" role="tab" aria-selected="false">
+          <span class="dot"></span><span>Manager View</span><span class="tag">Team</span>
+        </button>
+        <button id="btn-hr" data-view="hr" role="tab" aria-selected="false">
+          <span class="dot"></span><span>HR View</span><span class="tag">Admin</span>
+        </button>
+      </div>
+
+      <div class="ws-tools">
+        <button class="ws-tool" id="btn-mobile" title="Toggle mobile preview">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 19h2"/></svg>
+          <span>Mobile preview</span>
+        </button>
+        <button class="ws-tool" id="btn-open" title="Open in new tab">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M10 6H4v14h14v-6"/></svg>
+          <span>Open</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="ws-frame-wrap" id="frame-wrap">
+      <iframe id="fr-staff"   class="ws-frame"      src="Web Staff Portal.html" title="Web Staff Portal"></iframe>
+      <iframe id="fr-manager" class="ws-frame hide" src="" title="Team Manager Portal" loading="lazy"></iframe>
+      <iframe id="fr-hr"      class="ws-frame hide" src="" title="HR System Console" loading="lazy"></iframe>
+
+      <div class="ws-side" id="mobile-side">
+        <div class="ws-side-h">
+          <span class="lbl">Mobile · 3 personas</span>
+          <span class="lo">· Staff · Manager · HR</span>
+          <button class="x" id="btn-mobile-close">✕</button>
+        </div>
+        <iframe id="fr-mobile" src="" title="Mobile Personas"></iframe>
+      </div>
+
+      <button class="ws-side-tab hidden" id="btn-mobile-pop">
+        <span class="ico">↗</span><span>Open mobile previews</span>
+      </button>
+
+      <div class="ws-flash" id="flash"><span>Now viewing</span> <span class="accent" id="flash-name">Staff</span></div>
+    </div>
+  </div>
+
+<script>
+(function(){
+  const URLS = {
+    staff:   "Web Staff Portal.html",
+    manager: "Team Manager Portal.html",
+    hr:      "v1.0 HR System.html"
+  };
+  const LABELS = {
+    staff:   "Staff View · ESS",
+    manager: "Manager View · Team Console",
+    hr:      "HR View · Admin Console"
+  };
+  const MOBILE_URL = "Mobile Personas.html";
+
+  const btns   = { staff: document.getElementById("btn-staff"),   manager: document.getElementById("btn-manager"), hr: document.getElementById("btn-hr") };
+  const frames = { staff: document.getElementById("fr-staff"),    manager: document.getElementById("fr-manager"),  hr: document.getElementById("fr-hr") };
+  const btnOpen = document.getElementById("btn-open");
+  const flash = document.getElementById("flash");
+  const flashName = document.getElementById("flash-name");
+
+  const mobileSide = document.getElementById("mobile-side");
+  const frMobile = document.getElementById("fr-mobile");
+  const btnMobile = document.getElementById("btn-mobile");
+  const btnMobileClose = document.getElementById("btn-mobile-close");
+  const btnMobilePop = document.getElementById("btn-mobile-pop");
+
+  let view = "staff";
+
+  function setView(v){
+    view = v;
+    Object.keys(btns).forEach(k => {
+      btns[k].classList.toggle("on", k === v);
+      btns[k].setAttribute("aria-selected", k === v ? "true" : "false");
+    });
+    if (!frames[v].getAttribute("src")) frames[v].setAttribute("src", URLS[v]);
+    Object.keys(frames).forEach(k => frames[k].classList.toggle("hide", k !== v));
+
+    flashName.textContent = LABELS[v];
+    flash.classList.add("on");
+    clearTimeout(flash._t);
+    flash._t = setTimeout(()=>flash.classList.remove("on"), 1400);
+    try { history.replaceState(null, "", "?v=" + v); } catch(e) {}
+  }
+
+  Object.keys(btns).forEach(k => btns[k].addEventListener("click", ()=>setView(k)));
+  btnOpen.addEventListener("click", ()=>{ window.open(URLS[view], "_blank"); });
+
+  function showMobile(show){
+    mobileSide.classList.toggle("show", show);
+    btnMobilePop.classList.toggle("hidden", show);
+    btnMobile.classList.toggle("on", show);
+    if (show && !frMobile.getAttribute("src")) frMobile.setAttribute("src", MOBILE_URL);
+  }
+  btnMobile.addEventListener("click", ()=> showMobile(!mobileSide.classList.contains("show")));
+  btnMobileClose.addEventListener("click", ()=>{ showMobile(false); btnMobilePop.classList.remove("hidden"); });
+  btnMobilePop.addEventListener("click", ()=> showMobile(true));
+
+  const params = new URLSearchParams(location.search);
+  const q = params.get("v");
+  const initial = (q === "hr" || q === "manager" || q === "staff") ? q : "staff";
+  setView(initial);
+
+  document.addEventListener("keydown", (e)=>{
+    if ((e.metaKey || e.ctrlKey) && e.shiftKey) {
+      if (e.key.toLowerCase() === "s") { e.preventDefault(); setView("staff"); }
+      if (e.key.toLowerCase() === "m") { e.preventDefault(); setView("manager"); }
+      if (e.key.toLowerCase() === "h") { e.preventDefault(); setView("hr"); }
+    }
+  });
+})();
+</script>
+</body>
+</html>
